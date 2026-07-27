@@ -57,4 +57,7 @@ public class Student {
 
     @Column(name = "updated_at")
     private String updatedAt;
+
+    @Column(name = "canteen_id")
+    private String canteenId;
 }

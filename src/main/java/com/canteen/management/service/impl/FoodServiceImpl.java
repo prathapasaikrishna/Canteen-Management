@@ -1,0 +1,253 @@
+package com.canteen.management.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.canteen.management.dto.FoodRequest;
+import com.canteen.management.dto.FoodResponse;
+import com.canteen.management.entity.Food;
+import com.canteen.management.repository.FoodRepository;
+import com.canteen.management.service.FoodService;
+
+@Service
+public class FoodServiceImpl implements FoodService {
+
+    @Autowired
+    private FoodRepository foodRepository;
+
+    @Override
+    public FoodResponse addFood(FoodRequest foodRequest) {
+
+        Food food = new Food();
+
+        food.setFoodName(foodRequest.getFoodName());
+        food.setCategory(foodRequest.getCategory());
+        food.setPrice(foodRequest.getPrice());
+        food.setAvailableDate(foodRequest.getAvailableDate());
+        food.setAvailableTime(foodRequest.getAvailableTime());
+        food.setQuantity(foodRequest.getQuantity());
+        food.setStatus(foodRequest.getStatus());
+        food.setCanteenId(foodRequest.getCanteenId());
+
+        Food savedFood = foodRepository.save(food);
+
+        return new FoodResponse(
+                savedFood.getId(),
+                savedFood.getFoodName(),
+                savedFood.getCategory(),
+                savedFood.getPrice(),
+                savedFood.getAvailableDate(),
+                savedFood.getAvailableTime(),
+                savedFood.getQuantity(),
+                savedFood.getStatus(),
+                savedFood.getCanteenId(),
+                "Food Added Successfully"
+        );
+    }
+
+    @Override
+    public List<FoodResponse> getAllFoods() {
+
+        List<Food> foods = foodRepository.findAll();
+
+        List<FoodResponse> responseList = new ArrayList<>();
+
+        for (Food food : foods) {
+
+            responseList.add(
+                    new FoodResponse(
+                            food.getId(),
+                            food.getFoodName(),
+                            food.getCategory(),
+                            food.getPrice(),
+                            food.getAvailableDate(),
+                            food.getAvailableTime(),
+                            food.getQuantity(),
+                            food.getStatus(),
+                            food.getCanteenId(),
+                            "Success"
+                    )
+            );
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public FoodResponse getFoodById(Long id) {
+
+        Food food = foodRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Food Not Found"));
+
+        return new FoodResponse(
+                food.getId(),
+                food.getFoodName(),
+                food.getCategory(),
+                food.getPrice(),
+                food.getAvailableDate(),
+                food.getAvailableTime(),
+                food.getQuantity(),
+                food.getStatus(),
+                food.getCanteenId(),
+                "Food Found Successfully"
+        );
+    }
+
+    @Override
+    public FoodResponse updateFood(Long id, FoodRequest foodRequest) {
+
+        Food food = foodRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Food Not Found"));
+
+        food.setFoodName(foodRequest.getFoodName());
+        food.setCategory(foodRequest.getCategory());
+        food.setPrice(foodRequest.getPrice());
+        food.setAvailableDate(foodRequest.getAvailableDate());
+        food.setAvailableTime(foodRequest.getAvailableTime());
+        food.setQuantity(foodRequest.getQuantity());
+        food.setStatus(foodRequest.getStatus());
+        food.setCanteenId(foodRequest.getCanteenId());
+
+        Food updatedFood = foodRepository.save(food);
+
+        return new FoodResponse(
+                updatedFood.getId(),
+                updatedFood.getFoodName(),
+                updatedFood.getCategory(),
+                updatedFood.getPrice(),
+                updatedFood.getAvailableDate(),
+                updatedFood.getAvailableTime(),
+                updatedFood.getQuantity(),
+                updatedFood.getStatus(),
+                updatedFood.getCanteenId(),
+                "Food Updated Successfully"
+        );
+    }
+
+    @Override
+    public void deleteFood(Long id) {
+
+        Food food = foodRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Food Not Found"));
+
+        foodRepository.delete(food);
+    }
+
+    @Override
+    public List<FoodResponse> searchFood(String foodName) {
+
+        List<Food> foods = foodRepository.findByFoodNameContainingIgnoreCase(foodName);
+
+        List<FoodResponse> responseList = new ArrayList<>();
+
+        for (Food food : foods) {
+
+            responseList.add(
+                    new FoodResponse(
+                            food.getId(),
+                            food.getFoodName(),
+                            food.getCategory(),
+                            food.getPrice(),
+                            food.getAvailableDate(),
+                            food.getAvailableTime(),
+                            food.getQuantity(),
+                            food.getStatus(),
+                            food.getCanteenId(),
+                            "Success"
+                    )
+            );
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public List<FoodResponse> getFoodByCategory(String category) {
+
+        List<Food> foods = foodRepository.findByCategoryIgnoreCase(category);
+
+        List<FoodResponse> responseList = new ArrayList<>();
+
+        for (Food food : foods) {
+
+            responseList.add(
+                    new FoodResponse(
+                            food.getId(),
+                            food.getFoodName(),
+                            food.getCategory(),
+                            food.getPrice(),
+                            food.getAvailableDate(),
+                            food.getAvailableTime(),
+                            food.getQuantity(),
+                            food.getStatus(),
+                            food.getCanteenId(),
+                            "Success"
+                    )
+            );
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public List<FoodResponse> getTodayMenu() {
+
+        String today = LocalDate.now().toString();
+
+        List<Food> foods = foodRepository.findByAvailableDate(today);
+
+        List<FoodResponse> responseList = new ArrayList<>();
+
+        for (Food food : foods) {
+
+            responseList.add(
+                    new FoodResponse(
+                            food.getId(),
+                            food.getFoodName(),
+                            food.getCategory(),
+                            food.getPrice(),
+                            food.getAvailableDate(),
+                            food.getAvailableTime(),
+                            food.getQuantity(),
+                            food.getStatus(),
+                            food.getCanteenId(),
+                            "Success"
+                    )
+            );
+        }
+
+        return responseList;
+    }
+
+    @Override
+    public List<FoodResponse> getLowStockFoods() {
+
+        List<Food> foods = foodRepository.findByQuantityLessThan(10);
+
+        List<FoodResponse> responseList = new ArrayList<>();
+
+        for (Food food : foods) {
+
+            responseList.add(
+                    new FoodResponse(
+                            food.getId(),
+                            food.getFoodName(),
+                            food.getCategory(),
+                            food.getPrice(),
+                            food.getAvailableDate(),
+                            food.getAvailableTime(),
+                            food.getQuantity(),
+                            food.getStatus(),
+                            food.getCanteenId(),
+                            "Low Stock"
+                    )
+            );
+        }
+
+        return responseList;
+    }
+}

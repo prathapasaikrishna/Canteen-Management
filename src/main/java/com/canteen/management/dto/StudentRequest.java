@@ -34,4 +34,6 @@ public class StudentRequest {
 
     @NotBlank(message = "Role is required")
     private String role;
+
+    private String canteenId;
 }

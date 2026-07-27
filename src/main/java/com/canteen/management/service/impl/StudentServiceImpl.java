@@ -1,67 +1,163 @@
-package com.canteen.management.service.impl;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.canteen.management.dto.LoginRequest;
-import com.canteen.management.dto.LoginResponse;
-import com.canteen.management.dto.StudentRequest;
-import com.canteen.management.dto.StudentResponse;
-import com.canteen.management.entity.Student;
-import com.canteen.management.exception.EmailAlreadyExistsException;
-import com.canteen.management.repository.StudentRepository;
-import com.canteen.management.service.StudentService;
-
-@Service
-public class StudentServiceImpl implements StudentService {
-
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Override
-    public StudentResponse saveStudent(StudentRequest studentRequest) {
-
-        if (studentRepository.existsByEmail(studentRequest.getEmail())) {
-            throw new EmailAlreadyExistsException("Email already exists");
-        }
-
-        Student student = new Student();
-
-        student.setStudentId(studentRequest.getStudentId());
-        student.setName(studentRequest.getName());
-        student.setEmail(studentRequest.getEmail());
-        student.setPassword(studentRequest.getPassword());
-        student.setDepartment(studentRequest.getDepartment());
-        student.setMobileNumber(studentRequest.getMobileNumber());
-        student.setYear(studentRequest.getYear());
-        student.setRole(studentRequest.getRole());
-
-        Student savedStudent = studentRepository.save(student);
-
-        return new StudentResponse(
-                savedStudent.getId(),
-                savedStudent.getStudentId(),
-                savedStudent.getName(),
-                savedStudent.getEmail(),
-                savedStudent.getDepartment(),
-                savedStudent.getMobileNumber(),
-                savedStudent.getYear(),
-                savedStudent.getRole(),
-                "Student Registered Successfully"
-        );
-    }
-
-    @Override
-    public LoginResponse login(LoginRequest loginRequest) {
-
-        Student student = studentRepository.findByEmailAndPassword(
-                loginRequest.getEmail(),
-                loginRequest.getPassword());
-
-        if (student != null) {
-            return new LoginResponse("Login Successful", "");
-        } else {
-            return new LoginResponse("Invalid Email or Password", "");
-        }
-    }
+package com.canteen.management.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.canteen.management.dto.LoginRequest;
+import com.canteen.management.dto.LoginResponse;
+import com.canteen.management.dto.StudentRequest;
+import com.canteen.management.dto.StudentResponse;
+import com.canteen.management.entity.Student;
+import com.canteen.management.exception.EmailAlreadyExistsException;
+import com.canteen.management.repository.StudentRepository;
+import com.canteen.management.security.JwtUtil;
+
+import java.util.Optional;
+import com.canteen.management.dto.UpdateProfileRequest;
+import com.canteen.management.dto.UpdateProfileResponse;
+import com.canteen.management.service.StudentService;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+
+    @Override
+    public StudentResponse saveStudent(StudentRequest studentRequest) {
+
+        if (studentRepository.existsByEmail(studentRequest.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already exists");
+        }
+
+        Student student = new Student();
+
+        student.setStudentId(studentRequest.getStudentId());
+        student.setName(studentRequest.getName());
+        student.setEmail(studentRequest.getEmail());
+
+        // BCrypt Password Encryption
+        student.setPassword(
+                passwordEncoder.encode(studentRequest.getPassword())
+        );
+
+        student.setDepartment(studentRequest.getDepartment());
+        student.setMobileNumber(studentRequest.getMobileNumber());
+        student.setYear(studentRequest.getYear());
+        student.setRole(studentRequest.getRole());
+        student.setCanteenId(studentRequest.getCanteenId());
+
+        Student savedStudent = studentRepository.save(student);
+
+        return new StudentResponse(
+                savedStudent.getId(),
+                savedStudent.getStudentId(),
+                savedStudent.getName(),
+                savedStudent.getEmail(),
+                savedStudent.getDepartment(),
+                savedStudent.getMobileNumber(),
+                savedStudent.getYear(),
+                savedStudent.getRole(),
+                savedStudent.getCanteenId(),
+                "Student Registered Successfully"
+        );
+    }
+
+
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+
+
+        Student student = studentRepository.findByEmail(
+                loginRequest.getEmail()
+        );
+
+
+        if(student != null &&
+                passwordEncoder.matches(
+                        loginRequest.getPassword(),
+                        student.getPassword()
+                )) {
+
+
+            // Generate JWT Token
+            String token = jwtUtil.generateToken(student.getEmail());
+
+            LoginResponse response = new LoginResponse(
+                    "Login Successful",
+                    token
+            );
+
+            response.setStudentId(student.getStudentId());
+            response.setStudentName(student.getName());
+            response.setEmail(student.getEmail());
+            response.setMobileNumber(student.getMobileNumber());
+
+            response.setRole(student.getRole());
+            response.setCanteenId(student.getCanteenId());
+
+            response.setEmail(student.getEmail());
+            response.setStudentName(student.getName());
+            response.setMobileNumber(student.getMobileNumber());
+
+
+            return response;
+
+        } else {
+
+            return new LoginResponse(
+                    "Invalid Email or Password",
+                    ""
+            );
+        }
+    }
+
+    @Override
+    public UpdateProfileResponse updateProfile(UpdateProfileRequest request) {
+
+        Optional<Student> optionalStudent =
+                studentRepository.findByStudentId(request.getStudentId());
+
+        if (optionalStudent.isEmpty()) {
+            return new UpdateProfileResponse("Student Not Found");
+        }
+
+        Student student = optionalStudent.get();
+
+        student.setName(request.getName());
+        student.setMobileNumber(request.getMobileNumber());
+
+        studentRepository.save(student);
+
+        return new UpdateProfileResponse(
+                "Profile Updated Successfully"
+        );
+    }
+
+    @Override
+    public StudentResponse getStudentByStudentId(String studentId) {
+        Student student = studentRepository.findByStudentId(studentId)
+                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+        return new StudentResponse(
+                student.getId(),
+                student.getStudentId(),
+                student.getName(),
+                student.getEmail(),
+                student.getDepartment(),
+                student.getMobileNumber(),
+                student.getYear(),
+                student.getRole(),
+                student.getCanteenId(),
+                "Success"
+        );
+    }
 }

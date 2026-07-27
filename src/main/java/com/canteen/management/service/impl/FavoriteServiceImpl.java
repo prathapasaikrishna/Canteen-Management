@@ -1,0 +1,72 @@
+package com.canteen.management.service.impl;
+
+import com.canteen.management.dto.FavoriteRequest;
+import com.canteen.management.dto.FavoriteResponse;
+import com.canteen.management.entity.Favorite;
+import com.canteen.management.repository.FavoriteRepository;
+import com.canteen.management.service.FavoriteService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@org.springframework.transaction.annotation.Transactional
+public class FavoriteServiceImpl implements FavoriteService {
+
+    @Autowired
+    private FavoriteRepository favoriteRepository;
+
+    @Override
+    public FavoriteResponse addFavorite(FavoriteRequest request) {
+
+        Favorite favorite = favoriteRepository
+                .findByStudentIdAndFoodId(
+                        request.getStudentId(),
+                        request.getFoodId())
+                .orElse(new Favorite());
+
+        favorite.setStudentId(request.getStudentId());
+        favorite.setFoodId(request.getFoodId());
+
+        Favorite saved = favoriteRepository.save(favorite);
+
+        return new FavoriteResponse(
+                saved.getId(),
+                saved.getStudentId(),
+                saved.getFoodId()
+        );
+    }
+
+    @Override
+    public void removeFavorite(FavoriteRequest request) {
+
+        favoriteRepository.deleteByStudentIdAndFoodId(
+                request.getStudentId(),
+                request.getFoodId()
+        );
+
+    }
+
+    @Override
+    public List<FavoriteResponse> getFavorites(String studentId) {
+
+        List<Favorite> favorites =
+                favoriteRepository.findByStudentId(studentId);
+
+        List<FavoriteResponse> list = new ArrayList<>();
+
+        for (Favorite favorite : favorites) {
+
+            list.add(new FavoriteResponse(
+                    favorite.getId(),
+                    favorite.getStudentId(),
+                    favorite.getFoodId()
+            ));
+        }
+
+        return list;
+    }
+}

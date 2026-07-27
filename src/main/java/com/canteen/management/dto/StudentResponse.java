@@ -15,5 +15,6 @@ public class StudentResponse {
     private String mobileNumber;
     private String year;
     private String role;
+    private String canteenId;
     private String message;
 }

@@ -12,7 +12,20 @@ public class LoginResponse {
     private String message;
     private String token;
 
+    private String studentId;
+    private String role;
+    private String canteenId;
+
+    private String email;
+    private String studentName;
+    private String mobileNumber;
+
     public LoginResponse(String message) {
         this.message = message;
+    }
+
+    public LoginResponse(String message, String token) {
+        this.message = message;
+        this.token = token;
     }
 }

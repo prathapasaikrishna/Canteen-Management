@@ -1,5 +1,6 @@
 package com.canteen.management.controller;
 
+import com.canteen.management.dto.RatingResponse;
 import com.canteen.management.dto.ReviewRequest;
 import com.canteen.management.dto.ReviewResponse;
 import com.canteen.management.service.ReviewService;
@@ -25,5 +26,12 @@ public class ReviewController {
     @GetMapping("/food/{foodId}")
     public List<ReviewResponse> getReviewsByFood(@PathVariable Long foodId) {
         return reviewService.getReviewsByFood(foodId);
+    }
+
+    @GetMapping("/rating/{foodId}")
+    public RatingResponse getRating(@PathVariable Long foodId) {
+
+        return reviewService.getRating(foodId);
+
     }
 }

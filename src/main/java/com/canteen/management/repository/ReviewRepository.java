@@ -9,4 +9,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByFoodIdOrderByIdDesc(Long foodId);
 
+    @org.springframework.data.jpa.repository.Query(
+            "SELECT AVG(r.rating) FROM Review r WHERE r.foodId = :foodId"
+    )
+    Double getAverageRating(Long foodId);
+
+
+    Long countByFoodId(Long foodId);
+
 }

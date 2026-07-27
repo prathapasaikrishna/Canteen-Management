@@ -1,5 +1,6 @@
 package com.canteen.management.service.impl;
 
+import com.canteen.management.dto.RatingResponse;
 import com.canteen.management.dto.ReviewRequest;
 import com.canteen.management.dto.ReviewResponse;
 import com.canteen.management.entity.Review;
@@ -89,6 +90,29 @@ public class ReviewServiceImpl implements ReviewService {
 
         return responseList;
 
+    }
+
+    @Override
+    public RatingResponse getRating(Long foodId) {
+
+        Double averageRating = reviewRepository.getAverageRating(foodId);
+
+        Long totalReviews = reviewRepository.countByFoodId(foodId);
+
+        if (averageRating == null) {
+            averageRating = 0.0;
+        }
+
+        if (totalReviews == null) {
+            totalReviews = 0L;
+        }
+
+        averageRating = Math.round(averageRating * 10.0) / 10.0;
+
+        return new RatingResponse(
+                averageRating,
+                totalReviews
+        );
     }
 
 }

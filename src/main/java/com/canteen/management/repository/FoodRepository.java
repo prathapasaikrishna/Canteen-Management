@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.canteen.management.entity.Food;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FoodRepository extends JpaRepository<Food, Long> {
@@ -21,4 +22,6 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findByCanteenId(String canteenId);
 
     Long countByCanteenId(String canteenId);
+
+    Optional<Food> findById(Long id);
 }

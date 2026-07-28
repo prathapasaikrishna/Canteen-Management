@@ -4,10 +4,11 @@ import java.util.List;
 
 import com.canteen.management.dto.FoodRequest;
 import com.canteen.management.dto.FoodResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface FoodService {
 
-    FoodResponse addFood(FoodRequest foodRequest);
+    FoodResponse addFood(FoodRequest foodRequest, MultipartFile image);
 
     List<FoodResponse> getAllFoods();
 

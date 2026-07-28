@@ -31,4 +31,6 @@ public class FoodRequest {
     private String canteenId;
 
     private String imageUrl;
+
+
 }

@@ -34,6 +34,9 @@ public class Food {
     @Column(name = "canteen_id")
     private String canteenId;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public Food() {
     }
 
@@ -120,5 +123,13 @@ public class Food {
 
     public void setCanteenId(String canteenId) {
         this.canteenId = canteenId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

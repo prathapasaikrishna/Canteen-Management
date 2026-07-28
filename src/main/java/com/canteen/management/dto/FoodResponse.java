@@ -19,4 +19,7 @@ public class FoodResponse {
     private String status;
     private String canteenId;
     private String message;
+    private String imageUrl;
+
 }
+

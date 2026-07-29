@@ -48,13 +48,17 @@ public class FoodController {
 
         return foodService.getFoodById(id);
     }
-
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FoodResponse> updateFood(
             @PathVariable Long id,
-            @RequestPart("food") Food food,
+            @RequestPart("food") String foodJson,
             @RequestPart(value = "image", required = false) MultipartFile image
-    ) {
+    ) throws Exception {
+
+        com.fasterxml.jackson.databind.ObjectMapper mapper =
+                new com.fasterxml.jackson.databind.ObjectMapper();
+
+        Food food = mapper.readValue(foodJson, Food.class);
 
         FoodResponse updatedFood = foodService.updateFood(id, food, image);
 

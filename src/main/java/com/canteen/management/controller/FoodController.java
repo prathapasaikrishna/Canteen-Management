@@ -2,15 +2,16 @@ package com.canteen.management.controller;
 
 import java.util.List;
 
+import com.canteen.management.entity.Food;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.canteen.management.dto.FoodRequest;
 import com.canteen.management.dto.FoodResponse;
 import com.canteen.management.service.FoodService;
 
-import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -48,12 +49,16 @@ public class FoodController {
         return foodService.getFoodById(id);
     }
 
-    @PutMapping("/update/{id}")
-    public FoodResponse updateFood(
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FoodResponse> updateFood(
             @PathVariable Long id,
-            @Valid @RequestBody FoodRequest foodRequest) {
+            @RequestPart("food") Food food,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
 
-        return foodService.updateFood(id, foodRequest);
+        FoodResponse updatedFood = foodService.updateFood(id, food, image);
+
+        return ResponseEntity.ok(updatedFood);
     }
 
     @DeleteMapping("/delete/{id}")

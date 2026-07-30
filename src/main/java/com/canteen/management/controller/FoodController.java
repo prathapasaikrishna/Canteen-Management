@@ -14,6 +14,8 @@ import com.canteen.management.service.FoodService;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.web.bind.annotation.RequestPart;
+
 @RestController
 @RequestMapping("/food")
 public class FoodController {
@@ -96,4 +98,6 @@ public class FoodController {
 
         return foodService.getLowStockFoods();
     }
+
+
 }

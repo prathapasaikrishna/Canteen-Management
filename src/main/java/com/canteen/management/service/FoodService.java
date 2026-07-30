@@ -1,11 +1,12 @@
 package com.canteen.management.service;
 
-import java.util.List;
-
 import com.canteen.management.dto.FoodRequest;
 import com.canteen.management.dto.FoodResponse;
 import com.canteen.management.entity.Food;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface FoodService {
 
@@ -17,8 +18,6 @@ public interface FoodService {
 
     FoodResponse updateFood(Long id, Food foodRequest, MultipartFile image);
 
-
-
     void deleteFood(Long id);
 
     List<FoodResponse> searchFood(String foodName);
@@ -28,7 +27,4 @@ public interface FoodService {
     List<FoodResponse> getTodayMenu();
 
     List<FoodResponse> getLowStockFoods();
-
-
-
 }

@@ -13,7 +13,6 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
-    private AdminService dashboardService;
 
     @GetMapping("/dashboard")
     public DashboardResponse getDashboard(@org.springframework.web.bind.annotation.RequestParam(value = "canteenId", required = false) String canteenId) {
@@ -24,7 +23,7 @@ public class AdminController {
     public DashboardResponse getFilteredDashboard(
             @RequestBody SalesFilterRequest request){
 
-        return dashboardService.getFilteredDashboard(
+        return adminService.getFilteredDashboard(
                 request.getCanteenId(),
                 request.getFilter()
         );

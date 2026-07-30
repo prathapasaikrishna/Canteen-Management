@@ -24,4 +24,6 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     Long countByCanteenId(String canteenId);
 
     Optional<Food> findById(Long id);
+
+
 }

@@ -34,6 +34,11 @@ public class Order {
     @Column(nullable = false)
     private String paymentStatus;
 
+
+
+    @Column(unique = true)
+    private String qrCode;
+
     @Column(name = "canteen_id")
     private String canteenId;
 
@@ -52,6 +57,7 @@ public class Order {
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.paymentStatus = paymentStatus;
+
     }
 
     public Long getId() {
@@ -116,6 +122,14 @@ public class Order {
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 
     public String getPaymentStatus() {

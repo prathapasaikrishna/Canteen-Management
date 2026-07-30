@@ -40,4 +40,20 @@ public class NotificationServiceImpl implements NotificationService {
 
         return responseList;
     }
+
+    @Override
+    public void markAllRead(String studentId){
+
+        List<Notification> list =
+                notificationRepository.findByStudentIdOrderByIdDesc(studentId);
+
+        for(Notification n : list){
+
+            n.setRead(true);
+
+        }
+
+        notificationRepository.saveAll(list);
+
+    }
 }

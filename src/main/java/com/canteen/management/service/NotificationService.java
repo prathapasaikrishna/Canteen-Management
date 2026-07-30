@@ -8,4 +8,5 @@ public interface NotificationService {
 
     List<NotificationResponse> getNotifications(String studentId);
 
+    void markAllRead(String studentId);
 }

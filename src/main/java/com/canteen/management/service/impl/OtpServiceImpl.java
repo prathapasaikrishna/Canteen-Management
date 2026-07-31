@@ -34,8 +34,13 @@ public class OtpServiceImpl implements OtpService {
     @Override
     public boolean verifyOtp(String email, String otp) {
 
+        System.out.println("VERIFY EMAIL : " + email);
+        System.out.println("USER OTP : " + otp);
+        System.out.println("SERVER OTP : " + otpMap.get(email));
+
         if (!otpMap.containsKey(email))
             return false;
+
 
         if (System.currentTimeMillis() > expiryMap.get(email)) {
 
@@ -44,17 +49,16 @@ public class OtpServiceImpl implements OtpService {
 
             return false;
         }
-        System.out.println("VERIFY EMAIL : " + email);
-        System.out.println("ENTERED OTP : " + otp);
-        System.out.println("SAVED OTP : " + otpMap.get(email));
+
+
         boolean valid = otp.equals(otpMap.get(email));
 
-        if (valid) {
 
+        if(valid){
             otpMap.remove(email);
             expiryMap.remove(email);
-
         }
+
 
         return valid;
     }

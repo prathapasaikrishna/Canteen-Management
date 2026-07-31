@@ -20,6 +20,8 @@ public class OtpServiceImpl implements OtpService {
                 new Random().nextInt(999999));
 
         otpMap.put(email, otp);
+        System.out.println("GENERATED OTP : " + otp);
+        System.out.println("OTP EMAIL : " + email);
 
         expiryMap.put(
                 email,
@@ -42,7 +44,9 @@ public class OtpServiceImpl implements OtpService {
 
             return false;
         }
-
+        System.out.println("VERIFY EMAIL : " + email);
+        System.out.println("ENTERED OTP : " + otp);
+        System.out.println("SAVED OTP : " + otpMap.get(email));
         boolean valid = otp.equals(otpMap.get(email));
 
         if (valid) {

@@ -3,12 +3,10 @@ package com.canteen.management.service.impl;
 import com.canteen.management.dto.NotificationResponse;
 import com.canteen.management.entity.Notification;
 import com.canteen.management.repository.NotificationRepository;
-import com.canteen.management.service.NotificationService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.canteen.management.service.NotificationService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,42 +16,31 @@ public class NotificationServiceImpl implements NotificationService {
     private NotificationRepository notificationRepository;
 
     @Override
-    public List<NotificationResponse> getNotifications(String studentId) {
+    public void sendPushNotification(
+            String studentId,
+            String title,
+            String message
+    ) {
 
-        List<Notification> notifications =
-                notificationRepository.findByStudentIdOrderByIdDesc(studentId);
+        // Firebase code later
 
-        List<NotificationResponse> responseList = new ArrayList<>();
-
-        for (Notification notification : notifications) {
-
-            NotificationResponse response = new NotificationResponse();
-
-            response.setId(notification.getId());
-            response.setTitle(notification.getTitle());
-            response.setMessage(notification.getMessage());
-            response.setTime(notification.getTime());
-            response.setRead(notification.isRead());
-
-            responseList.add(response);
-        }
-
-        return responseList;
     }
 
     @Override
-    public void markAllRead(String studentId){
+    public List<NotificationResponse> getNotifications(String studentId) {
+        return List.of();
+    }
 
-        List<Notification> list =
-                notificationRepository.findByStudentIdOrderByIdDesc(studentId);
+    @Override
+    public void markAllRead(String studentId) {
 
-        for(Notification n : list){
+        List<Notification> notifications =
+                notificationRepository.findByStudentId(studentId);
 
-            n.setRead(true);
-
+        for (Notification notification : notifications) {
+            notification.setRead(true);
         }
 
-        notificationRepository.saveAll(list);
-
+        notificationRepository.saveAll(notifications);
     }
 }

@@ -60,4 +60,7 @@ public class Student {
 
     @Column(name = "canteen_id")
     private String canteenId;
+
+    @Column(name = "fcm_token", length = 500)
+    private String fcmToken;
 }

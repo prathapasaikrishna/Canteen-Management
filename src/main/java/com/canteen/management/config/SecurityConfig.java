@@ -32,6 +32,7 @@ public class SecurityConfig {
 
                         // Public APIs
                         .requestMatchers(
+                                "/",
                                 "/student/login",
                                 "/student/register",
                                 "/student/forgot-password",

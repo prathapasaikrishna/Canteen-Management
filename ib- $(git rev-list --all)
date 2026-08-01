@@ -1,0 +1,23 @@
+[33mcommit b692a005901a89c99a63d357f51b813de0f02d20[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: dany <prathapadany@gmail.com>
+Date:   Sat Aug 1 19:38:13 2026 +0530
+
+    Added review feature
+
+[33mcommit 2873d214ccbf01af46b0e39f3f46095fe5b891b3[m
+Author: dany <prathapadany@gmail.com>
+Date:   Sat Aug 1 19:29:33 2026 +0530
+
+    Added review feature
+
+[33mcommit a0e54319653326239760585763478f4acbbf0381[m
+Author: dany <prathapadany@gmail.com>
+Date:   Sat Aug 1 00:43:13 2026 +0530
+
+    Added review feature
+
+[33mcommit 354862bd2139da987369cad9577c58613ffa6623[m
+Author: dany <prathapadany@gmail.com>
+Date:   Sat Aug 1 00:03:55 2026 +0530
+
+    Restore application configuration without secrets

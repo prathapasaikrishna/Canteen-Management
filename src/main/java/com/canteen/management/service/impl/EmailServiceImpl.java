@@ -3,6 +3,7 @@ package com.canteen.management.service.impl;
 import com.canteen.management.service.EmailService;
 import org.hibernate.sql.Template;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,10 @@ import java.util.Map;
 @Service
 public class EmailServiceImpl implements EmailService {
 
+
     @Autowired
     private RestTemplate template;
+
     @Value("${brevo.api.key}")
     private String apiKey;
 

@@ -35,15 +35,14 @@ public class NotificationController {
     }
 
     @PostMapping("/test")
-    public ResponseEntity<String> sendTestNotification(
-            @RequestBody NotificationRequest request) {
+    public String testNotification() {
 
         notificationService.sendPushNotification(
-                request.getStudentId(),
-                request.getTitle(),
-                request.getMessage()
+                "STU002",
+                "Smart Foods",
+                "Hello Darling ❤️"
         );
 
-        return ResponseEntity.ok("Notification Sent Successfully");
+        return "Notification Sent Successfully";
     }
 }

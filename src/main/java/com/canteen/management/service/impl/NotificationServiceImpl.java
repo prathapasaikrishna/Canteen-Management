@@ -36,6 +36,25 @@ public class NotificationServiceImpl implements NotificationService {
             String title,
             String message) {
 
+        // Save Notification in Database immediately so student always gets it in-app!
+        try {
+            Notification notification = new Notification();
+            notification.setStudentId(studentId);
+            notification.setTitle(title);
+            notification.setMessage(message);
+            notification.setTime(
+                    LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")
+                    )
+            );
+            notification.setRead(false);
+            notification.setBroadcast(false);
+            notificationRepository.save(notification);
+        } catch (Exception e) {
+            System.out.println("Error saving notification in DB: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         Student student = studentRepository
                 .findByStudentId(studentId)
                 .orElse(null);
@@ -214,5 +233,10 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository
                 .countByStudentIdAndReadFalse(studentId);
 
+    }
+
+    @Override
+    public void deleteNotification(Long id) {
+        notificationRepository.deleteById(id);
     }
 }

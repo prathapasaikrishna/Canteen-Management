@@ -28,4 +28,5 @@ public interface NotificationService {
 
     long getUnreadCount(String studentId);
 
+    void deleteNotification(Long id);
 }

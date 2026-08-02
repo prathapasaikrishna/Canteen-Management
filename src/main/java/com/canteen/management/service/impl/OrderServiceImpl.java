@@ -67,24 +67,10 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        Notification notification = new Notification();
-
-        notification.setStudentId(savedOrder.getStudentId());
-        notification.setTitle("🛒 Order Placed");
-
-        notification.setMessage( "Your order " + savedOrder.getOrderNumber() + " has been placed successfully.");
-
-        notification.setTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")));
-
-        notification.setRead(false);
-
-        notificationRepository.save(notification);
-
         notificationService.sendPushNotification(
                 savedOrder.getStudentId(),
-                notification.getTitle(),
-                notification.getMessage()
-
+                "🛒 Order Placed",
+                "Your order " + savedOrder.getOrderNumber() + " has been placed successfully."
         );
 
         return new OrderResponse(savedOrder.getId(),
@@ -163,60 +149,33 @@ public class OrderServiceImpl implements OrderService {
             order.setQrCode(null);
         }
         Order savedOrder = orderRepository.save(order);
-        Notification notification = new Notification();
-        notification.setStudentId(savedOrder.getStudentId());
-
-                if (status.equalsIgnoreCase("ACCEPTED")) {
-
-                    notification.setTitle("✅ Order Accepted");
-
-                    notification.setMessage(
-                            "Your order "
-                                    + savedOrder.getOrderNumber()
-                                    + " has been accepted."
-                    );
-
-                }
-                else if (status.equalsIgnoreCase("PREPARING")) {
-                    notification.setTitle("🍳 Order Preparing");
-                  notification.setMessage(  "Your order " + savedOrder.getOrderNumber() + " is being prepared." );
-
-        } else if (status.equalsIgnoreCase("COMPLETED") ||
-                        status.equalsIgnoreCase("READY")) {
-                    notification.setTitle("✅ Order Ready");
-                    notification.setMessage("Your order " + savedOrder.getOrderNumber() + " is ready for pickup.");
-
-                } else if (status.equalsIgnoreCase("CANCELLED")) {
-
-                        notification.setTitle("❌ Order Cancelled");
-
-                        notification.setMessage(
-                                "Sorry, your order "
-                                        + savedOrder.getOrderNumber()
-                                        + " has been cancelled."
-                        );
-
-
-
-        } else if (status.equalsIgnoreCase("COLLECTED"))
-        { notification.setTitle("🎉 Order Collected");
-            notification.setMessage( "Thank you! Your order " + savedOrder.getOrderNumber()  + " has been collected." );
-
+        String notifTitle = "";
+        String notifMessage = "";
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            notifTitle = "✅ Order Accepted";
+            notifMessage = "Your order " + savedOrder.getOrderNumber() + " has been accepted.";
+        } else if (status.equalsIgnoreCase("PREPARING")) {
+            notifTitle = "🍳 Order Preparing";
+            notifMessage = "Your order " + savedOrder.getOrderNumber() + " is being prepared.";
+        } else if (status.equalsIgnoreCase("COMPLETED") || status.equalsIgnoreCase("READY")) {
+            notifTitle = "✅ Order Ready";
+            notifMessage = "Your order " + savedOrder.getOrderNumber() + " is ready for pickup.";
+        } else if (status.equalsIgnoreCase("CANCELLED")) {
+            notifTitle = "❌ Order Cancelled";
+            notifMessage = "Sorry, your order " + savedOrder.getOrderNumber() + " has been cancelled.";
+        } else if (status.equalsIgnoreCase("COLLECTED")) {
+            notifTitle = "🎉 Order Collected";
+            notifMessage = "Thank you! Your order " + savedOrder.getOrderNumber() + " has been collected.";
         } else {
-            notification.setTitle("📦 Order Updated");
-            notification.setMessage( "Your order status changed to " + status );
+            notifTitle = "📦 Order Updated";
+            notifMessage = "Your order status changed to " + status;
         }
-            notification.setTime
-                    (LocalDateTime.now().format( DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")));
 
-                notification.setRead(false);
-                notificationRepository.save(notification);
-
-                notificationService.sendPushNotification(
-                        savedOrder.getStudentId(),
-                        notification.getTitle(),
-                        notification.getMessage()
-                );
+        notificationService.sendPushNotification(
+                savedOrder.getStudentId(),
+                notifTitle,
+                notifMessage
+        );
 
 
                 return new OrderResponse(savedOrder.getId(),

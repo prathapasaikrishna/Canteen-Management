@@ -41,7 +41,8 @@ public class SecurityConfig {
                                 "/student/verify-otp",
                                 "/food/all",
 
-                                "/notification/test"
+                                "/notification/test",
+                                "/notification/broadcast"
 
                         ).permitAll()
 

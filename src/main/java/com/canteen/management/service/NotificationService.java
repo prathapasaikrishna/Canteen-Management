@@ -26,4 +26,6 @@ public interface NotificationService {
             String message
     );
 
+    long getUnreadCount(String studentId);
+
 }

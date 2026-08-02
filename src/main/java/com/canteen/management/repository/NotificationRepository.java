@@ -11,4 +11,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findByStudentId(String studentId);
 
+    long countByStudentIdAndReadFalse(String studentId);
+
 }

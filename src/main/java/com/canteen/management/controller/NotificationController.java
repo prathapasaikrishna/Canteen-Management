@@ -58,4 +58,13 @@ public class NotificationController {
         return "Broadcast Sent Successfully";
 
     }
+
+    @GetMapping("/unread/{studentId}")
+    public long unreadCount(
+            @PathVariable String studentId){
+
+        return notificationService
+                .getUnreadCount(studentId);
+
+    }
 }

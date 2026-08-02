@@ -77,7 +77,18 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationResponse> getNotifications(String studentId) {
-        return List.of();
+        List<Notification> notifications = notificationRepository.findByStudentId(studentId);
+        List<NotificationResponse> responseList = new ArrayList<>();
+        for (Notification notification : notifications) {
+            NotificationResponse res = new NotificationResponse();
+            res.setId(notification.getId());
+            res.setTitle(notification.getTitle());
+            res.setMessage(notification.getMessage());
+            res.setTime(notification.getTime());
+            res.setRead(notification.isRead());
+            responseList.add(res);
+        }
+        return responseList;
     }
 
     @Override
@@ -195,5 +206,13 @@ public class NotificationServiceImpl implements NotificationService {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public long getUnreadCount(String studentId) {
+
+        return notificationRepository
+                .countByStudentIdAndReadFalse(studentId);
+
     }
 }

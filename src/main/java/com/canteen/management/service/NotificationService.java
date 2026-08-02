@@ -16,5 +16,9 @@ public interface NotificationService {
 
     void markAllRead(String studentId);
 
+    void notifyAllStudents(
+            String title,
+            String body
+    );
 
 }

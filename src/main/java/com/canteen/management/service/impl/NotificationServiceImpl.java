@@ -23,6 +23,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private StudentRepository studentRepository;
 
+
+
     @Override
     public void sendPushNotification(
             String studentId,
@@ -84,5 +86,45 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         notificationRepository.saveAll(notifications);
+    }
+
+    @Override
+    public void notifyAllStudents(String title, String message) {
+
+        List<Student> students = studentRepository.findAll();
+
+        for (Student student : students) {
+
+            if (student.getFcmToken() == null ||
+                    student.getFcmToken().isBlank()) {
+                continue;
+            }
+
+            try {
+
+                Message firebaseMessage =
+                        Message.builder()
+                                .setToken(student.getFcmToken())
+                                .setNotification(
+                                        com.google.firebase.messaging.Notification.builder()
+                                                .setTitle(title)
+                                                .setBody(message)
+                                                .build()
+                                )
+                                .build();
+
+                FirebaseMessaging.getInstance().send(firebaseMessage);
+
+                System.out.println("Notification Sent To : "
+                        + student.getStudentId());
+
+            } catch (Exception e) {
+
+                System.out.println("Failed : "
+                        + student.getStudentId());
+
+                e.printStackTrace();
+            }
+        }
     }
 }

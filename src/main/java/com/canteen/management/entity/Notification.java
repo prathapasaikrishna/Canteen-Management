@@ -21,4 +21,7 @@ public class Notification {
     private String time;
 
     private boolean isRead;
+
+    @Column(name = "broadcast")
+    private boolean broadcast;
 }

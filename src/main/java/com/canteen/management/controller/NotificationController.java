@@ -1,5 +1,6 @@
 package com.canteen.management.controller;
 
+import com.canteen.management.dto.BroadcastNotificationRequest;
 import com.canteen.management.dto.NotificationResponse;
 import com.canteen.management.service.NotificationService;
 import com.canteen.management.dto.NotificationRequest;
@@ -44,5 +45,17 @@ public class NotificationController {
         );
 
         return "Notification Sent Successfully";
+    }
+
+    @PostMapping("/broadcast")
+    public String broadcast(
+            @RequestBody BroadcastNotificationRequest request){
+
+        notificationService.sendBroadcastNotification(
+                request.getTitle(),
+                request.getMessage());
+
+        return "Broadcast Sent Successfully";
+
     }
 }

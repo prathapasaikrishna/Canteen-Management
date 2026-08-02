@@ -10,6 +10,11 @@ import com.canteen.management.entity.Student;
 import com.canteen.management.repository.StudentRepository;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.canteen.management.entity.Student;
 
 
 import java.util.List;
@@ -93,6 +98,8 @@ public class NotificationServiceImpl implements NotificationService {
 
         List<Student> students = studentRepository.findAll();
 
+
+
         for (Student student : students) {
 
             if (student.getFcmToken() == null ||
@@ -122,6 +129,68 @@ public class NotificationServiceImpl implements NotificationService {
 
                 System.out.println("Failed : "
                         + student.getStudentId());
+
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public void sendBroadcastNotification(String title, String message) {
+
+        List<Student> students = studentRepository.findAll();
+
+        for (Student student : students) {
+
+            // Save Notification in Database
+            Notification notification = new Notification();
+
+            notification.setStudentId(student.getStudentId());
+            notification.setTitle(title);
+            notification.setMessage(message);
+            notification.setTime(
+                    LocalDateTime.now().format(
+                            DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")
+                    )
+            );
+            notification.setRead(false);
+            notification.setBroadcast(true);
+
+            notificationRepository.save(notification);
+
+            // Skip if no FCM Token
+            if (student.getFcmToken() == null || student.getFcmToken().isBlank()) {
+                continue;
+            }
+
+            try {
+
+                Message firebaseMessage = Message.builder()
+                        .setToken(student.getFcmToken())
+                        .setNotification(
+                                com.google.firebase.messaging.Notification.builder()
+                                        .setTitle(title)
+                                        .setBody(message)
+                                        .build()
+                        )
+                        .build();
+
+                String response = FirebaseMessaging
+                        .getInstance()
+                        .send(firebaseMessage);
+
+                System.out.println(
+                        "Broadcast Sent to "
+                                + student.getStudentId()
+                                + " : "
+                                + response
+                );
+
+            } catch (Exception e) {
+
+                System.out.println(
+                        "Failed for Student : "
+                                + student.getStudentId()
+                );
 
                 e.printStackTrace();
             }

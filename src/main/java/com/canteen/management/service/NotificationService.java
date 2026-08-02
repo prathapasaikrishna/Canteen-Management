@@ -21,4 +21,9 @@ public interface NotificationService {
             String body
     );
 
+    void sendBroadcastNotification(
+            String title,
+            String message
+    );
+
 }

@@ -6,6 +6,11 @@ import com.canteen.management.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.canteen.management.service.NotificationService;
+import com.canteen.management.entity.Student;
+import com.canteen.management.repository.StudentRepository;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+
 
 import java.util.List;
 
@@ -15,15 +20,52 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Override
     public void sendPushNotification(
             String studentId,
             String title,
-            String message
-    ) {
+            String message) {
 
-        // Firebase code later
+        Student student = studentRepository
+                .findByStudentId(studentId)
+                .orElse(null);
 
+        if (student == null) {
+            return;
+        }
+
+        if (student.getFcmToken() == null ||
+                student.getFcmToken().isEmpty()) {
+            return;
+        }
+
+        try {
+
+            Message firebaseMessage =
+                    Message.builder()
+                            .setToken(student.getFcmToken())
+                            .setNotification(
+                                    com.google.firebase.messaging.Notification.builder()
+                                            .setTitle(title)
+                                            .setBody(message)
+                                            .build()
+                            )
+                            .build();
+
+            String response =
+                    FirebaseMessaging.getInstance()
+                            .send(firebaseMessage);
+
+            System.out.println("Notification Sent : " + response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
     }
 
     @Override

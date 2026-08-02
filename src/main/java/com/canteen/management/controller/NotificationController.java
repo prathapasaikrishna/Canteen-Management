@@ -2,6 +2,7 @@ package com.canteen.management.controller;
 
 import com.canteen.management.dto.NotificationResponse;
 import com.canteen.management.service.NotificationService;
+import com.canteen.management.dto.NotificationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,18 @@ public class NotificationController {
 
         return ResponseEntity.ok().build();
 
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> sendTestNotification(
+            @RequestBody NotificationRequest request) {
+
+        notificationService.sendPushNotification(
+                request.getStudentId(),
+                request.getTitle(),
+                request.getMessage()
+        );
+
+        return ResponseEntity.ok("Notification Sent Successfully");
     }
 }

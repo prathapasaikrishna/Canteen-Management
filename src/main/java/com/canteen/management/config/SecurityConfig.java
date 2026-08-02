@@ -32,13 +32,17 @@ public class SecurityConfig {
 
                         // Public APIs
                         .requestMatchers(
+
                                 "/",
                                 "/student/login",
                                 "/student/register",
                                 "/student/forgot-password",
                                 "/student/reset-password",
                                 "/student/verify-otp",
-                                "/food/all"
+                                "/food/all",
+
+                                "/notification/test"
+
                         ).permitAll()
 
                         // Everything else requires JWT

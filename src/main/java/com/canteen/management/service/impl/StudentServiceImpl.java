@@ -2,8 +2,10 @@ package com.canteen.management.service.impl;
 
 import com.canteen.management.dto.*;
 import com.canteen.management.entity.Student;
+import com.canteen.management.entity.Wallet;
 import com.canteen.management.exception.EmailAlreadyExistsException;
 import com.canteen.management.repository.StudentRepository;
+import com.canteen.management.repository.WalletRepository;
 import com.canteen.management.security.JwtUtil;
 import com.canteen.management.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private WalletRepository walletRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -45,6 +50,13 @@ public class StudentServiceImpl implements StudentService {
         student.setCanteenId(studentRequest.getCanteenId());
         
         Student savedStudent = studentRepository.save(student);
+
+        Wallet wallet = new Wallet();
+
+        wallet.setStudentId(savedStudent.getStudentId());
+        wallet.setBalance(100.0); // Welcome Bonus
+
+        walletRepository.save(wallet);
         
         return new StudentResponse(
                 savedStudent.getId(),
@@ -58,7 +70,11 @@ public class StudentServiceImpl implements StudentService {
                 savedStudent.getCanteenId(),
                 "Student Registered Successfully"
         );
+
+
     }
+
+
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {

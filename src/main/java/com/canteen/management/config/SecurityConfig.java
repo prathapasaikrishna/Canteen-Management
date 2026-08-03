@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 "/student/forgot-password",
                                 "/student/reset-password",
                                 "/student/verify-otp",
+                                "/student/google-login",
                                 "/food/all",
 
                                 "/notification/test",

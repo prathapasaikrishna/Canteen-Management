@@ -55,7 +55,6 @@ public class StudentServiceImpl implements StudentService {
 
         wallet.setStudentId(savedStudent.getStudentId());
         wallet.setBalance(100.0); // Welcome Bonus
-
         walletRepository.save(wallet);
         
         return new StudentResponse(

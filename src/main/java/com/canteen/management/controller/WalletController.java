@@ -8,6 +8,10 @@ import com.canteen.management.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.canteen.management.dto.CreateOrderRequest;
+import com.canteen.management.dto.CreateOrderResponse;
+import com.canteen.management.service.RazorpayService;
+
 import java.util.List;
 
 @RestController
@@ -17,6 +21,9 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
+
+    @Autowired
+    private RazorpayService razorpayService;
 
     @GetMapping("/{studentId}")
     public WalletResponse getWallet(
@@ -44,5 +51,13 @@ public class WalletController {
             @PathVariable String studentId) {
 
         return walletService.getHistory(studentId);
+    }
+
+    @PostMapping("/create-order")
+    public CreateOrderResponse createOrder(
+            @RequestBody CreateOrderRequest request) throws Exception {
+
+        return razorpayService.createOrder(request.getAmount());
+
     }
 }

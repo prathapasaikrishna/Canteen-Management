@@ -45,7 +45,8 @@ public class SecurityConfig {
                                 "/notification/test",
                                 "/notification/broadcast",
 
-                                "/wallet/**"
+                                "/wallet/**",
+                                "/wallet/create-order"
 
 
                         ).permitAll()

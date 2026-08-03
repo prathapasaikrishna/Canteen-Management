@@ -3,7 +3,7 @@ package com.canteen.management.dto;
 import lombok.Data;
 
 @Data
-public class AddMoneyRequest {
+public class RazorpayOrderRequest {
 
     private String studentId;
     private Double amount;

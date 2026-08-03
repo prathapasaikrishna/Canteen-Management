@@ -43,7 +43,10 @@ public class SecurityConfig {
                                 "/food/all",
 
                                 "/notification/test",
-                                "/notification/broadcast"
+                                "/notification/broadcast",
+
+                                "/wallet/**"
+
 
                         ).permitAll()
 

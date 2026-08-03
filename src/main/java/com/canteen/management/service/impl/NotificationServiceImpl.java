@@ -232,12 +232,12 @@ public class NotificationServiceImpl implements NotificationService {
     public long getUnreadCount(String studentId) {
 
         return notificationRepository
-                .countByStudentIdAndReadFalse(studentId);
+                .countByStudentIdAndIsReadFalse(studentId);
 
     }
 
     @Override
     public void deleteNotification(Long id) {
-        notificationRepository.deleteById(id);
+        notificationRepository.deleteById(Math.toIntExact(id));
     }
 }

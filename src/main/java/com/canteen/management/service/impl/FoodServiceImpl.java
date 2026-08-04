@@ -49,10 +49,11 @@ public class FoodServiceImpl implements FoodService {
                 food.getQuantity(),
                 food.getStatus(),
                 food.getCanteenId(),
-
                 message,
                 ratingVal,
-                revCount
+                revCount,
+                food.getOrganizationId(),
+                food.getBranchId()
         );
     }
 

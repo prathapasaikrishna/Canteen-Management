@@ -48,4 +48,15 @@ AND f.branchId = :branchId
     );
 
 
+    @Query(value = """
+SELECT *
+FROM food
+WHERE organization_id = :organizationId
+AND branch_id = :branchId
+""", nativeQuery = true)
+    List<Food> testFoods(
+            @Param("organizationId") Long organizationId,
+            @Param("branchId") Long branchId
+    );
+
 }

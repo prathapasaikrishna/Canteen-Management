@@ -29,6 +29,8 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private JwtUtil jwtUtil;
 
+
+
     @Override
     public StudentResponse saveStudent(StudentRequest studentRequest) {
         if (studentRepository.existsByEmail(studentRequest.getEmail())) {
@@ -38,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
         student.setStudentId(studentRequest.getStudentId());
         student.setName(studentRequest.getName());
         student.setEmail(studentRequest.getEmail());
-        
+
         // BCrypt Password Encryption
         student.setPassword(
                 passwordEncoder.encode(studentRequest.getPassword())
@@ -48,6 +50,11 @@ public class StudentServiceImpl implements StudentService {
         student.setYear(studentRequest.getYear());
         student.setRole(studentRequest.getRole());
         student.setCanteenId(studentRequest.getCanteenId());
+
+        student.setOrganizationId(studentRequest.getOrganizationId());
+
+        student.setBranchId(studentRequest.getBranchId());
+
         
         Student savedStudent = studentRepository.save(student);
 
@@ -56,7 +63,8 @@ public class StudentServiceImpl implements StudentService {
         wallet.setStudentId(savedStudent.getStudentId());
         wallet.setBalance(100.0); // Welcome Bonus
         walletRepository.save(wallet);
-        
+
+
         return new StudentResponse(
                 savedStudent.getId(),
                 savedStudent.getStudentId(),
@@ -67,9 +75,10 @@ public class StudentServiceImpl implements StudentService {
                 savedStudent.getYear(),
                 savedStudent.getRole(),
                 savedStudent.getCanteenId(),
-                "Student Registered Successfully"
+                "Student Registered Successfully",
+                savedStudent.getOrganizationId(),
+                savedStudent.getBranchId()
         );
-
 
     }
 
@@ -147,7 +156,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponse getStudentByStudentId(String studentId) {
         Student student = studentRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
-                
+
         return new StudentResponse(
                 student.getId(),
                 student.getStudentId(),
@@ -158,9 +167,10 @@ public class StudentServiceImpl implements StudentService {
                 student.getYear(),
                 student.getRole(),
                 student.getCanteenId(),
-                "Success"
-        );
-    }
+                "Success",
+                student.getOrganizationId(),
+                student.getBranchId()
+        );    }
 
     @Override
     public ApiResponse changePassword(ChangePasswordRequest request) {

@@ -20,6 +20,9 @@ public class LoginResponse {
     private String studentName;
     private String mobileNumber;
 
+    private Long organizationId;
+    private Long branchId;
+
     public LoginResponse(String message) {
         this.message = message;
     }

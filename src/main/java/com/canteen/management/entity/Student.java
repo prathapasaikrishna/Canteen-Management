@@ -63,4 +63,8 @@ public class Student {
 
     @Column(name = "fcm_token", length = 500)
     private String fcmToken;
+
+    private Long organizationId;
+
+    private Long branchId;
 }

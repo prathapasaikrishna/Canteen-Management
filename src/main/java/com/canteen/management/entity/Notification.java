@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "notifications")
+@Table(name = "notifications", indexes = {
+    @Index(name = "idx_notifications_student", columnList = "studentId")
+})
 public class Notification {
 
     @Id

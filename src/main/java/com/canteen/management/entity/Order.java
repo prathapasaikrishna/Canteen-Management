@@ -3,7 +3,10 @@ package com.canteen.management.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+    @Index(name = "idx_orders_student", columnList = "studentId"),
+    @Index(name = "idx_orders_number", columnList = "orderNumber")
+})
 public class Order {
 
     @Id

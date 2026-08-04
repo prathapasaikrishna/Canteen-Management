@@ -34,8 +34,10 @@ public class Food {
     @Column(name = "canteen_id")
     private String canteenId;
 
+    @Column(name = "organization_id")
     private Long organizationId;
 
+    @Column(name = "branch_id")
     private Long branchId;
 
     public Long getOrganizationId() {

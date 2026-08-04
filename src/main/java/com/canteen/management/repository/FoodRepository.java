@@ -1,6 +1,8 @@
 package com.canteen.management.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.canteen.management.entity.Food;
@@ -32,6 +34,17 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findByOrganizationIdAndBranchId(
             Long organizationId,
             Long branchId
+    );
+
+    @Query("""
+SELECT f
+FROM Food f
+WHERE f.organizationId = :organizationId
+AND f.branchId = :branchId
+""")
+    List<Food> getFoods(
+            @Param("organizationId") Long organizationId,
+            @Param("branchId") Long branchId
     );
 
 

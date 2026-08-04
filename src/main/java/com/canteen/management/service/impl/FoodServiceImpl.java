@@ -185,7 +185,7 @@ public class FoodServiceImpl implements FoodService {
             Long branchId) {
 
         List<Food> foods =
-                foodRepository.findByOrganizationIdAndBranchId(
+                foodRepository.getFoods(
                         organizationId,
                         branchId
                 );

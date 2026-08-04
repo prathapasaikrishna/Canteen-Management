@@ -50,7 +50,7 @@ public class SecurityConfig {
                                 "/coupon/**",
                                 "/organization/**",
                                 "/branch/**",
-                                "/food/**"
+                                "/food/branch"
 
 
                         ).permitAll()

@@ -27,4 +27,9 @@ public interface FoodService {
     List<FoodResponse> getTodayMenu();
 
     List<FoodResponse> getLowStockFoods();
+
+    List<FoodResponse> getFoodsByBranch(
+            Long organizationId,
+            Long branchId
+    );
 }

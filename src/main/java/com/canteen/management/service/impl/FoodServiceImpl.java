@@ -49,6 +49,7 @@ public class FoodServiceImpl implements FoodService {
                 food.getQuantity(),
                 food.getStatus(),
                 food.getCanteenId(),
+
                 message,
                 ratingVal,
                 revCount
@@ -72,6 +73,14 @@ public class FoodServiceImpl implements FoodService {
         food.setQuantity(foodRequest.getQuantity());
         food.setStatus(foodRequest.getStatus());
         food.setCanteenId(foodRequest.getCanteenId());
+
+        food.setOrganizationId(
+                foodRequest.getOrganizationId()
+        );
+
+        food.setBranchId(
+                foodRequest.getBranchId()
+        );
 
         Food savedFood = foodRepository.save(food);
 
@@ -167,6 +176,26 @@ public class FoodServiceImpl implements FoodService {
         for (Food food : foods) {
             responseList.add(mapToResponse(food, "Success"));
         }
+        return responseList;
+    }
+
+    @Override
+    public List<FoodResponse> getFoodsByBranch(
+            Long organizationId,
+            Long branchId) {
+
+        List<Food> foods =
+                foodRepository.findByOrganizationIdAndBranchId(
+                        organizationId,
+                        branchId
+                );
+
+        List<FoodResponse> responseList = new ArrayList<>();
+
+        for (Food food : foods) {
+            responseList.add(mapToResponse(food, "Success"));
+        }
+
         return responseList;
     }
 }

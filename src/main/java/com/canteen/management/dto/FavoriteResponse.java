@@ -13,4 +13,8 @@ public class FavoriteResponse {
 
     private Long foodId;
 
+    private Long organizationId;
+
+    private Long branchId;
+
 }

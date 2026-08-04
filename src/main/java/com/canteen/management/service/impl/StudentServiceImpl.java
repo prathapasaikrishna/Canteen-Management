@@ -123,6 +123,9 @@ public class StudentServiceImpl implements StudentService {
             response.setRole(student.getRole());
             response.setCanteenId(student.getCanteenId());
 
+            response.setOrganizationId(student.getOrganizationId());
+            response.setBranchId(student.getBranchId());
+
             return response;
         } else {
             return new LoginResponse(
@@ -260,6 +263,9 @@ public class StudentServiceImpl implements StudentService {
         response.setMobileNumber(student.getMobileNumber());
         response.setRole(student.getRole());
         response.setCanteenId(student.getCanteenId());
+
+        response.setOrganizationId(student.getOrganizationId());
+        response.setBranchId(student.getBranchId());
 
         return response;
     }

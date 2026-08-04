@@ -99,5 +99,21 @@ public class FoodController {
         return foodService.getLowStockFoods();
     }
 
+    @GetMapping("/branch")
+    public List<FoodResponse> getFoodsByBranch(
+
+            @RequestParam Long organizationId,
+
+            @RequestParam Long branchId
+
+    ) {
+
+        return foodService.getFoodsByBranch(
+                organizationId,
+                branchId
+        );
+
+    }
+
 
 }

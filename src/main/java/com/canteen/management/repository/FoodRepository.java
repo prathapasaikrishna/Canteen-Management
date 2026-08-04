@@ -25,5 +25,14 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
     Optional<Food> findById(Long id);
 
+    List<Food> findByBranchId(Long branchId);
+
+    List<Food> findByOrganizationId(Long organizationId);
+
+    List<Food> findByOrganizationIdAndBranchId(
+            Long organizationId,
+            Long branchId
+    );
+
 
 }

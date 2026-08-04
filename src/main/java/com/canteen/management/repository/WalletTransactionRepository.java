@@ -12,4 +12,5 @@ public interface WalletTransactionRepository
             String studentId
     );
 
+    boolean existsByRazorpayPaymentId(String razorpayPaymentId);
 }

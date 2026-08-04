@@ -15,6 +15,8 @@ public interface WalletService {
 
     List<TransactionResponse> getHistory(String studentId);
 
-
+    VerifyPaymentResponse verifyPayment(
+            VerifyPaymentRequest request
+    );
 
 }

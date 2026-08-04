@@ -42,12 +42,14 @@ public class Order {
     @Column(name = "canteen_id")
     private String canteenId;
 
+    private String paymentMethod;
+
     public Order() {
     }
 
     public Order(Long id, String orderNumber, String studentId, Long foodId,
                  Integer quantity, Double totalPrice, String orderDate,
-                 String orderStatus, String paymentStatus) {
+                 String orderStatus, String paymentStatus, String paymentMethod) {
         this.id = id;
         this.orderNumber = orderNumber;
         this.studentId = studentId;
@@ -57,7 +59,15 @@ public class Order {
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.paymentStatus = paymentStatus;
+        this.paymentMethod = paymentMethod;
+    }
 
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public Long getId() {

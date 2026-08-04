@@ -9,4 +9,6 @@ public interface EmailService {
     );
 
     void sendOtp(String email, String otp);
+
+    void sendOrderInvoiceEmail(String toEmail, String studentName, String orderNumber, String foodName, int quantity, double totalPrice, String date);
 }

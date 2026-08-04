@@ -1,15 +1,10 @@
 package com.canteen.management.controller;
 
-import com.canteen.management.dto.AddMoneyRequest;
-import com.canteen.management.dto.TransactionResponse;
-import com.canteen.management.dto.WalletPaymentRequest;
-import com.canteen.management.dto.WalletResponse;
+import com.canteen.management.dto.*;
 import com.canteen.management.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.canteen.management.dto.CreateOrderRequest;
-import com.canteen.management.dto.CreateOrderResponse;
 import com.canteen.management.service.RazorpayService;
 
 import java.util.List;
@@ -58,6 +53,15 @@ public class WalletController {
             @RequestBody CreateOrderRequest request) throws Exception {
 
         return razorpayService.createOrder(request.getAmount());
+
+    }
+
+    @PostMapping("/verify-payment")
+    public VerifyPaymentResponse verifyPayment(
+
+            @RequestBody VerifyPaymentRequest request){
+
+        return walletService.verifyPayment(request);
 
     }
 }

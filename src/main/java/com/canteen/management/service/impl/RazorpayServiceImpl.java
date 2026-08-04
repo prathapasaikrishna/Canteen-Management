@@ -36,4 +36,9 @@ public class RazorpayServiceImpl implements RazorpayService {
                 "INR"
         );
     }
+
+    @Override
+    public boolean verifySignature(String orderId, String paymentId, String signature) {
+        return false;
+    }
 }

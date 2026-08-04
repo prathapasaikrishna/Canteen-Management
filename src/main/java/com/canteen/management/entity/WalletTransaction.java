@@ -27,6 +27,15 @@ public class WalletTransaction {
 
     private LocalDateTime createdAt;
 
+    @Column(unique = true)
+    private String razorpayPaymentId;
+
+    private String razorpayOrderId;
+
+    private String razorpaySignature;
+
+    private String paymentStatus;
+
     @PrePersist
     public void onCreate() {
         createdAt = LocalDateTime.now();

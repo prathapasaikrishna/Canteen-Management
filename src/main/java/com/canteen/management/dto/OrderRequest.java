@@ -15,4 +15,6 @@ public class OrderRequest {
 
     @NotNull(message = "Quantity is required")
     private Integer quantity;
+
+    private String paymentMethod;
 }

@@ -47,7 +47,8 @@ public class SecurityConfig {
 
                                 "/wallet/**",
                                 "/wallet/create-order",
-                                "/coupon/**"
+                                "/coupon/**",
+                                "/organization/**"
 
 
                         ).permitAll()

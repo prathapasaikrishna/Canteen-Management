@@ -50,7 +50,7 @@ public class FoodController {
 
         return foodService.getFoodById(id);
     }
-    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FoodResponse> updateFood(
             @PathVariable Long id,
             @RequestPart("food") String foodJson,

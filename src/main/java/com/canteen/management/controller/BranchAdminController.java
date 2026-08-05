@@ -42,12 +42,6 @@ public class BranchAdminController {
         return service.getAllBranchAdmins();
     }
 
-    @GetMapping("/branch/{branchId}")
-    public List<BranchAdminResponse> byBranch(
-            @PathVariable Long branchId) {
-
-        return service.getBranchAdminsByBranch(branchId);
-    }
 
     @PutMapping("/update/{id}")
     public BranchAdminResponse update(

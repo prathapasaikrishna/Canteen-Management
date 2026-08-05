@@ -136,6 +136,5 @@ public class Employee {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-// getters setters generate cheyyali
 
 }

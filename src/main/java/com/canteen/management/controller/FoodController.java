@@ -58,6 +58,13 @@ public class FoodController {
             @RequestParam(value = "image", required = false) MultipartFile image
     ) throws Exception {
 
+        System.out.println("==================================================");
+        System.out.println("UPDATE FOOD ENDPOINT RECEIVED");
+        System.out.println("Food ID: " + id);
+        System.out.println("Food JSON: " + foodJson);
+        System.out.println("Image Received: " + (image != null ? image.getOriginalFilename() + " (" + image.getSize() + " bytes)" : "NULL"));
+        System.out.println("==================================================");
+
         com.fasterxml.jackson.databind.ObjectMapper mapper =
                 new com.fasterxml.jackson.databind.ObjectMapper()
                 .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

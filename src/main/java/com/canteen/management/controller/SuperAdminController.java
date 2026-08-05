@@ -1,54 +1,24 @@
 package com.canteen.management.controller;
 
-import com.canteen.management.entity.Branch;
-import com.canteen.management.entity.Organization;
-import com.canteen.management.repository.BranchRepository;
-import com.canteen.management.repository.OrganizationRepository;
+import com.canteen.management.dto.SuperAdminLoginRequest;
+import com.canteen.management.dto.SuperAdminLoginResponse;
+import com.canteen.management.service.SuperAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
-@RequestMapping("/superadmin")
+@RequestMapping("/super-admin")
 @CrossOrigin("*")
 public class SuperAdminController {
 
     @Autowired
-    private OrganizationRepository organizationRepository;
+    private SuperAdminService superAdminService;
 
-    @Autowired
-    private BranchRepository branchRepository;
+    @PostMapping("/login")
+    public ResponseEntity<SuperAdminLoginResponse> login(
+            @RequestBody SuperAdminLoginRequest request) {
 
-    @PostMapping("/organization/create")
-    public Organization createOrganization(@RequestBody Organization organization) {
-        return organizationRepository.save(organization);
-    }
-
-    @PostMapping("/branch/create")
-    public ResponseEntity<Branch> createBranch(@RequestParam Long organizationId, @RequestBody Branch branch) {
-        return organizationRepository.findById(organizationId)
-                .map(org -> {
-                    branch.setOrganization(org);
-                    Branch saved = branchRepository.save(branch);
-                    return ResponseEntity.ok(saved);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/organization/status")
-    public ResponseEntity<Organization> updateOrganizationStatus(@RequestParam Long id, @RequestParam String status) {
-        return organizationRepository.findById(id)
-                .map(org -> {
-                    org.setStatus(status);
-                    Organization updated = organizationRepository.save(org);
-                    return ResponseEntity.ok(updated);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/organizations")
-    public List<Organization> getAllOrganizations() {
-        return organizationRepository.findAll();
+        return ResponseEntity.ok(superAdminService.login(request));
     }
 }

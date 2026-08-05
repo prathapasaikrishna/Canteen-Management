@@ -7,6 +7,10 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -52,11 +56,7 @@ public class Student {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(name = "created_at")
-    private String createdAt;
 
-    @Column(name = "updated_at")
-    private String updatedAt;
 
     @Column(name = "canteen_id")
     private String canteenId;
@@ -67,4 +67,26 @@ public class Student {
     private Long organizationId;
 
     private Long branchId;
+
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+
+    @Column(name = "user_type")
+    private String userType;
+
+    @Column(name = "account_status")
+    private String accountStatus;
+
+    @Column(name = "loyalty_points")
+    private Integer loyaltyPoints = 0;
+
+    @Column(name = "loyalty_tier")
+    private String loyaltyTier = "SILVER";
 }

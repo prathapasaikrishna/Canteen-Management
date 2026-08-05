@@ -50,6 +50,9 @@ public class SecurityConfig {
                                 "/coupon/**",
                                 "/organization/**",
                                 "/branch/**",
+                                "/inventory/**",
+                                "/employee/**",
+                                "/superadmin/**",
                                 "/food/branch"
 
 

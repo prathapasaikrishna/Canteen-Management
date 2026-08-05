@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@lombok.NoArgsConstructor
 public class StudentResponse {
 
     private Integer id;
@@ -19,6 +20,9 @@ public class StudentResponse {
     private String message;
     private Long organizationId;
     private Long branchId;
+    private String userType;
+
+    private String accountStatus;
 
     public Integer getId() {
         return id;
@@ -106,6 +110,22 @@ public class StudentResponse {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 
     public Long getBranchId() {

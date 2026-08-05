@@ -65,20 +65,22 @@ public class StudentServiceImpl implements StudentService {
         walletRepository.save(wallet);
 
 
-        return new StudentResponse(
-                savedStudent.getId(),
-                savedStudent.getStudentId(),
-                savedStudent.getName(),
-                savedStudent.getEmail(),
-                savedStudent.getDepartment(),
-                savedStudent.getMobileNumber(),
-                savedStudent.getYear(),
-                savedStudent.getRole(),
-                savedStudent.getCanteenId(),
-                "Student Registered Successfully",
-                savedStudent.getOrganizationId(),
-                savedStudent.getBranchId()
-        );
+        StudentResponse response = new StudentResponse();
+        response.setId(savedStudent.getId());
+        response.setStudentId(savedStudent.getStudentId());
+        response.setName(savedStudent.getName());
+        response.setEmail(savedStudent.getEmail());
+        response.setDepartment(savedStudent.getDepartment());
+        response.setMobileNumber(savedStudent.getMobileNumber());
+        response.setYear(savedStudent.getYear());
+        response.setRole(savedStudent.getRole());
+        response.setCanteenId(savedStudent.getCanteenId());
+        response.setMessage("Student Registered Successfully");
+        response.setOrganizationId(savedStudent.getOrganizationId());
+        response.setBranchId(savedStudent.getBranchId());
+        response.setUserType(savedStudent.getUserType());
+        response.setAccountStatus(savedStudent.getAccountStatus());
+        return response;
 
     }
 
@@ -160,20 +162,22 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new RuntimeException("Student Not Found"));
 
-        return new StudentResponse(
-                student.getId(),
-                student.getStudentId(),
-                student.getName(),
-                student.getEmail(),
-                student.getDepartment(),
-                student.getMobileNumber(),
-                student.getYear(),
-                student.getRole(),
-                student.getCanteenId(),
-                "Success",
-                student.getOrganizationId(),
-                student.getBranchId()
-        );    }
+        StudentResponse response = new StudentResponse();
+        response.setId(student.getId());
+        response.setStudentId(student.getStudentId());
+        response.setName(student.getName());
+        response.setEmail(student.getEmail());
+        response.setDepartment(student.getDepartment());
+        response.setMobileNumber(student.getMobileNumber());
+        response.setYear(student.getYear());
+        response.setRole(student.getRole());
+        response.setCanteenId(student.getCanteenId());
+        response.setMessage("Success");
+        response.setOrganizationId(student.getOrganizationId());
+        response.setBranchId(student.getBranchId());
+        response.setUserType(student.getUserType());
+        response.setAccountStatus(student.getAccountStatus());
+        return response;    }
 
     @Override
     public ApiResponse changePassword(ChangePasswordRequest request) {

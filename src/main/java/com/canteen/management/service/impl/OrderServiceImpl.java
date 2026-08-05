@@ -238,6 +238,28 @@ public class OrderServiceImpl implements OrderService {
         } else if (status.equalsIgnoreCase("COLLECTED")) {
             notifTitle = "🎉 Order Collected";
             notifMessage = "Thank you! Your order " + order.getOrderNumber() + " has been collected.";
+            
+            try {
+                studentRepository.findByStudentId(order.getStudentId()).ifPresent(student -> {
+                    int pointsEarned = (int) (order.getTotalPrice() / 100);
+                    if (pointsEarned > 0) {
+                        int currentPoints = student.getLoyaltyPoints() != null ? student.getLoyaltyPoints() : 0;
+                        int newPoints = currentPoints + pointsEarned;
+                        student.setLoyaltyPoints(newPoints);
+                        
+                        if (newPoints > 200) {
+                            student.setLoyaltyTier("PLATINUM");
+                        } else if (newPoints > 50) {
+                            student.setLoyaltyTier("GOLD");
+                        } else {
+                            student.setLoyaltyTier("SILVER");
+                        }
+                        studentRepository.save(student);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             notifTitle = "📦 Order Updated";
             notifMessage = "Your order status changed to " + status;

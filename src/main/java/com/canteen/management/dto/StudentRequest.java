@@ -41,6 +41,8 @@ public class StudentRequest {
 
     private Long branchId;
 
+    private String userType;
+
     public String getStudentId() {
         return studentId;
     }
@@ -123,6 +125,14 @@ public class StudentRequest {
 
     public Long getBranchId() {
         return branchId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public void setBranchId(Long branchId) {

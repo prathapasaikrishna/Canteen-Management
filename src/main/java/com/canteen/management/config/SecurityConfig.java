@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 "/student/reset-password",
                                 "/student/verify-otp",
                                 "/student/google-login",
-                                "/food/all",
+                                "/food/**",
 
                                 "/notification/test",
                                 "/notification/broadcast",
@@ -52,8 +52,7 @@ public class SecurityConfig {
                                 "/branch/**",
                                 "/inventory/**",
                                 "/employee/**",
-                                "/superadmin/**",
-                                "/food/branch"
+                                "/superadmin/**"
 
 
                         ).permitAll()

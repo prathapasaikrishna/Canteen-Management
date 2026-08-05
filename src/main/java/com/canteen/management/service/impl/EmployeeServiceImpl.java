@@ -89,21 +89,102 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeResponse> getAllEmployees() {
-        return List.of();
+
+        return employeeRepository.findAll()
+                .stream()
+                .map(employee -> {
+
+                    EmployeeResponse response = new EmployeeResponse();
+
+                    response.setId(employee.getId());
+                    response.setOrganizationId(employee.getOrganizationId());
+                    response.setBranchId(employee.getBranchId());
+                    response.setEmployeeName(employee.getEmployeeName());
+                    response.setEmail(employee.getEmail());
+                    response.setMobile(employee.getMobile());
+                    response.setRole(employee.getRole());
+                    response.setStatus(employee.getStatus());
+
+                    return response;
+
+                }).collect(Collectors.toList());
+
     }
 
     @Override
     public List<EmployeeResponse> getEmployeesByBranch(Long branchId) {
-        return List.of();
+
+        return employeeRepository.findByBranchId(branchId)
+                .stream()
+                .map(employee -> {
+
+                    EmployeeResponse response = new EmployeeResponse();
+
+                    response.setId(employee.getId());
+                    response.setOrganizationId(employee.getOrganizationId());
+                    response.setBranchId(employee.getBranchId());
+                    response.setEmployeeName(employee.getEmployeeName());
+                    response.setEmail(employee.getEmail());
+                    response.setMobile(employee.getMobile());
+                    response.setRole(employee.getRole());
+                    response.setStatus(employee.getStatus());
+
+                    return response;
+
+                }).collect(Collectors.toList());
+
     }
 
     @Override
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
-        return null;
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee Not Found"));
+
+        employee.setOrganizationId(request.getOrganizationId());
+        employee.setBranchId(request.getBranchId());
+        employee.setEmployeeName(request.getEmployeeName());
+        employee.setEmail(request.getEmail());
+        employee.setMobile(request.getMobile());
+        employee.setRole(request.getRole());
+        employee.setStatus(request.getStatus());
+
+        if (request.getPassword() != null &&
+                !request.getPassword().isEmpty()) {
+
+            employee.setPassword(
+                    passwordEncoder.encode(request.getPassword())
+            );
+
+        }
+
+        employee = employeeRepository.save(employee);
+
+        EmployeeResponse response = new EmployeeResponse();
+
+        response.setId(employee.getId());
+        response.setOrganizationId(employee.getOrganizationId());
+        response.setBranchId(employee.getBranchId());
+        response.setEmployeeName(employee.getEmployeeName());
+        response.setEmail(employee.getEmail());
+        response.setMobile(employee.getMobile());
+        response.setRole(employee.getRole());
+        response.setStatus(employee.getStatus());
+        response.setMessage("Employee Updated Successfully");
+
+        return response;
+
     }
 
     @Override
     public String deleteEmployee(Long id) {
-        return "";
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee Not Found"));
+
+        employeeRepository.delete(employee);
+
+        return "Employee Deleted Successfully";
+
     }
 }

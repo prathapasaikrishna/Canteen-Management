@@ -289,4 +289,9 @@ public class OrderServiceImpl implements OrderService {
                 savedOrder.getPaymentMethod() != null ? savedOrder.getPaymentMethod() : "UNKNOWN"
         );
     }
+
+    @Override
+    public void deleteOrder(Long id) {
+        orderRepository.deleteById(id);
+    }
 }

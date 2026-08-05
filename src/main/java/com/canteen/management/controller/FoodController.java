@@ -143,4 +143,19 @@ public class FoodController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage() + "\n" + sw.toString());
         }
     }
+
+    @GetMapping("/debug-env")
+    public ResponseEntity<String> debugEnv() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CLOUDINARY_URL exists: ").append(System.getenv("CLOUDINARY_URL") != null).append("\n");
+        if (System.getenv("CLOUDINARY_URL") != null) {
+            String url = System.getenv("CLOUDINARY_URL");
+            sb.append("CLOUDINARY_URL value: ").append(url.replaceAll(":[^@]+@", ":***@")).append("\n");
+        }
+        sb.append("CLOUDINARY_CLOUD_NAME exists: ").append(System.getenv("CLOUDINARY_CLOUD_NAME") != null).append("\n");
+        sb.append("CLOUDINARY_CLOUD_NAME value: ").append(System.getenv("CLOUDINARY_CLOUD_NAME")).append("\n");
+        sb.append("CLOUDINARY_API_KEY exists: ").append(System.getenv("CLOUDINARY_API_KEY") != null).append("\n");
+        sb.append("CLOUDINARY_API_KEY value: ").append(System.getenv("CLOUDINARY_API_KEY")).append("\n");
+        return ResponseEntity.ok(sb.toString());
+    }
 }

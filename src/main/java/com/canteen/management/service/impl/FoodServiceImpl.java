@@ -125,7 +125,10 @@ public class FoodServiceImpl implements FoodService {
         food.setCanteenId(foodRequest.getCanteenId());
 
         if (image != null && !image.isEmpty()) {
-            food.setImageUrl(cloudinaryService.uploadImage(image));
+            String uploadedUrl = cloudinaryService.uploadImage(image);
+            if (uploadedUrl != null && !uploadedUrl.isEmpty()) {
+                food.setImageUrl(uploadedUrl);
+            }
         }
 
         Food updatedFood = foodRepository.save(food);

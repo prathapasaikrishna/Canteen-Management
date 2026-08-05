@@ -1,38 +1,62 @@
 package com.canteen.management.controller;
 
-import com.canteen.management.entity.Employee;
-import com.canteen.management.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.canteen.management.dto.EmployeeLoginRequest;
+import com.canteen.management.dto.EmployeeLoginResponse;
+import com.canteen.management.dto.EmployeeRequest;
+import com.canteen.management.dto.EmployeeResponse;
+import com.canteen.management.service.EmployeeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
 @CrossOrigin("*")
+@RequiredArgsConstructor
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @GetMapping("/branch/{branchId}")
-    public List<Employee> getEmployeesByBranch(@PathVariable Long branchId) {
-        return employeeRepository.findByBranchId(branchId);
-    }
+    private final EmployeeService employeeService;
 
     @PostMapping("/add")
-    public Employee addEmployee(@RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+    public EmployeeResponse addEmployee(
+            @RequestBody EmployeeRequest request) {
+
+        return employeeService.addEmployee(request);
     }
 
-    @PutMapping("/status")
-    public ResponseEntity<Employee> updateStatus(@RequestParam Long id, @RequestParam String status) {
-        return employeeRepository.findById(id)
-                .map(employee -> {
-                    employee.setStatus(status);
-                    Employee updated = employeeRepository.save(employee);
-                    return ResponseEntity.ok(updated);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping("/login")
+    public EmployeeLoginResponse login(
+            @RequestBody EmployeeLoginRequest request) {
+
+        return employeeService.login(request);
+    }
+
+    @GetMapping("/all")
+    public List<EmployeeResponse> getAllEmployees() {
+
+        return employeeService.getAllEmployees();
+    }
+
+    @GetMapping("/branch/{branchId}")
+    public List<EmployeeResponse> getEmployeesByBranch(
+            @PathVariable Long branchId) {
+
+        return employeeService.getEmployeesByBranch(branchId);
+    }
+
+    @PutMapping("/update/{id}")
+    public EmployeeResponse updateEmployee(
+            @PathVariable Long id,
+            @RequestBody EmployeeRequest request) {
+
+        return employeeService.updateEmployee(id, request);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteEmployee(
+            @PathVariable Long id) {
+
+        return employeeService.deleteEmployee(id);
     }
 }

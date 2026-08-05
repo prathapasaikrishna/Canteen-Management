@@ -1,5 +1,6 @@
 package com.canteen.management.service;
 
+import com.canteen.management.dto.AdminDashboardResponse;
 import com.canteen.management.dto.DashboardResponse;
 
 public interface AdminService {
@@ -9,4 +10,6 @@ public interface AdminService {
     DashboardResponse getFilteredDashboard(
             String canteenId,
             String filter);
+
+    AdminDashboardResponse getBranchDashboard(Long branchId);
 }

@@ -18,4 +18,18 @@ public interface BranchAdminService {
 
     BranchAdminLoginResponse login(BranchAdminLoginRequest request);
 
+    List<OrderResponse> getTodayOrders(Long branchId);
+
+    List<OrderResponse> getPendingOrders(Long branchId);
+
+    List<OrderResponse> getPreparingOrders(Long branchId);
+
+    List<OrderResponse> getReadyOrders(Long branchId);
+
+    List<OrderResponse> getCollectedOrders(Long branchId);
+
+    List<OrderResponse> getCancelledOrders(Long branchId);
+
+    OrderResponse updateOrderStatus(UpdateOrderStatusRequest request);
+
 }

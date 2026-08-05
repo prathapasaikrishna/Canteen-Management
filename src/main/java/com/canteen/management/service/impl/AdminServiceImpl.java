@@ -1,5 +1,6 @@
 package com.canteen.management.service.impl;
 
+import com.canteen.management.dto.AdminDashboardResponse;
 import com.canteen.management.entity.Food;
 import com.canteen.management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,6 +223,44 @@ public class AdminServiceImpl implements AdminService {
             response.setTopRatedFood("-");
             response.setTopRating(0.0);
         }
+
+        return response;
+    }
+
+    @Override
+    public AdminDashboardResponse getBranchDashboard(Long branchId){
+
+        AdminDashboardResponse response = new AdminDashboardResponse();
+
+        response.setTotalOrders(
+                orderRepository.countByBranchId(branchId)
+        );
+
+        response.setPendingOrders(
+                orderRepository.countByBranchIdAndOrderStatus(
+                        branchId,
+                        "PLACED"
+                )
+        );
+
+        response.setCompletedOrders(
+                orderRepository.countByBranchIdAndOrderStatus(
+                        branchId,
+                        "COLLECTED"
+                )
+        );
+
+        response.setTotalFoods(
+                foodRepository.countByBranchId(branchId)
+        );
+
+        response.setTotalStudents(
+                studentRepository.countByBranchId(branchId)
+        );
+
+        response.setTotalRevenue(
+                orderRepository.getTotalRevenue(branchId)
+        );
 
         return response;
     }

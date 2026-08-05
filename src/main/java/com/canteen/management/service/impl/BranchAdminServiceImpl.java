@@ -168,4 +168,39 @@ public class BranchAdminServiceImpl implements BranchAdminService {
 
         return response;
     }
+
+    @Override
+    public List<OrderResponse> getTodayOrders(Long branchId) {
+        return List.of();
+    }
+
+    @Override
+    public List<OrderResponse> getPendingOrders(Long branchId) {
+        return List.of();
+    }
+
+    @Override
+    public List<OrderResponse> getPreparingOrders(Long branchId) {
+        return List.of();
+    }
+
+    @Override
+    public List<OrderResponse> getReadyOrders(Long branchId) {
+        return List.of();
+    }
+
+    @Override
+    public List<OrderResponse> getCollectedOrders(Long branchId) {
+        return List.of();
+    }
+
+    @Override
+    public List<OrderResponse> getCancelledOrders(Long branchId) {
+        return List.of();
+    }
+
+    @Override
+    public OrderResponse updateOrderStatus(UpdateOrderStatusRequest request) {
+        return null;
+    }
 }

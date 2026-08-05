@@ -53,7 +53,8 @@ public class SecurityConfig {
                                 "/inventory/**",
                                 "/employee/**",
                                 "/superadmin/**",
-                                "/error"
+                                "/error",
+                                "/uploads/**"
 
 
                         ).permitAll()

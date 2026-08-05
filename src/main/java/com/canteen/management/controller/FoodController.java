@@ -30,7 +30,8 @@ public class FoodController {
             @RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
 
         com.fasterxml.jackson.databind.ObjectMapper mapper =
-                new com.fasterxml.jackson.databind.ObjectMapper();
+                new com.fasterxml.jackson.databind.ObjectMapper()
+                .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         FoodRequest foodRequest =
                 mapper.readValue(foodJson, FoodRequest.class);
@@ -58,7 +59,8 @@ public class FoodController {
     ) throws Exception {
 
         com.fasterxml.jackson.databind.ObjectMapper mapper =
-                new com.fasterxml.jackson.databind.ObjectMapper();
+                new com.fasterxml.jackson.databind.ObjectMapper()
+                .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         Food food = mapper.readValue(foodJson, Food.class);
 

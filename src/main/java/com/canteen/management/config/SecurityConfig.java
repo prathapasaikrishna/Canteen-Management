@@ -52,7 +52,6 @@ public class SecurityConfig {
                                 "/branch/**",
                                 "/inventory/**",
                                 "/employee/**",
-                                "/superadmin/**",
                                 "/error",
                                 "/uploads/**",
                                 "/super-admin/**"

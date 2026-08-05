@@ -17,8 +17,13 @@ public class SuperAdminServiceImpl implements SuperAdminService {
     @Override
     public SuperAdminLoginResponse login(SuperAdminLoginRequest request) {
 
+        System.out.println(request.getEmail());
+        System.out.println(request.getPassword());
+
         SuperAdmin admin = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid Email"));
+
+        System.out.println(admin);
 
         if (!admin.getPassword().equals(request.getPassword())) {
             throw new RuntimeException("Invalid Password");

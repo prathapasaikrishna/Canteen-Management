@@ -30,4 +30,13 @@ public class CloudinaryConfig {
                 )
         );
     }
+
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        System.out.println("==================================================");
+        System.out.println("Cloudinary Cloud Name: " + cloudName);
+        System.out.println("Cloudinary API Key: " + apiKey);
+        System.out.println("Cloudinary API Secret: " + (apiSecret != null ? apiSecret.substring(0, Math.min(3, apiSecret.length())) + "..." : "null"));
+        System.out.println("==================================================");
+    }
 }

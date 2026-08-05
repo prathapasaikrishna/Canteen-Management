@@ -124,5 +124,23 @@ public class FoodController {
 
     }
 
+    @Autowired
+    private com.cloudinary.Cloudinary cloudinary;
 
+    @PostMapping(value = "/test-upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> testUpload(
+            @RequestParam("image") MultipartFile image
+    ) {
+        try {
+            java.util.Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                    image.getBytes(),
+                    com.cloudinary.utils.ObjectUtils.emptyMap()
+            );
+            return ResponseEntity.ok("Success: " + uploadResult.get("secure_url").toString());
+        } catch (Exception e) {
+            java.io.StringWriter sw = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(sw));
+            return ResponseEntity.status(500).body("Error: " + e.getMessage() + "\n" + sw.toString());
+        }
+    }
 }

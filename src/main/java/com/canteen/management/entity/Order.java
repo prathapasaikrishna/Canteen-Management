@@ -16,6 +16,22 @@ public class Order {
     @Column(nullable = false)
     private String orderNumber;
 
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public Long getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
+    }
+
     @Column(nullable = false)
     private String studentId;
 
@@ -44,6 +60,12 @@ public class Order {
 
     @Column(name = "canteen_id")
     private String canteenId;
+
+    @Column(name = "organization_id")
+    private Long organizationId;
+
+    @Column(name = "branch_id")
+    private Long branchId;
 
     private String paymentMethod;
 
@@ -160,4 +182,6 @@ public class Order {
     public void setCanteenId(String canteenId) {
         this.canteenId = canteenId;
     }
+
+
 }

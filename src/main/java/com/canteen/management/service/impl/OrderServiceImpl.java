@@ -8,6 +8,7 @@ import com.canteen.management.service.NotificationService;
 import com.canteen.management.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.canteen.management.entity.Student;
 import com.canteen.management.entity.Notification;
 import com.canteen.management.repository.NotificationRepository;
 import com.canteen.management.repository.StudentRepository;
@@ -63,6 +64,9 @@ public class OrderServiceImpl implements OrderService {
         food.setQuantity(food.getQuantity() - orderRequest.getQuantity());
         foodRepository.save(food);
 
+        Student student = studentRepository.findByStudentId(orderRequest.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+
         Order order = new Order();
         order.setOrderNumber("ORD" + System.currentTimeMillis());
         order.setQrCode("QR" + System.currentTimeMillis());
@@ -72,6 +76,8 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(totalPrice);
         order.setOrderDate(LocalDate.now().toString());
         order.setOrderStatus("PLACED");
+
+
         
         // Dynamic payment method mapping
         String payMethod = orderRequest.getPaymentMethod() != null ? orderRequest.getPaymentMethod().toUpperCase() : "CASH";
@@ -83,6 +89,9 @@ public class OrderServiceImpl implements OrderService {
         }
         
         order.setCanteenId(food.getCanteenId());
+
+        order.setOrganizationId(student.getOrganizationId());
+        order.setBranchId(student.getBranchId());
 
         Order savedOrder = orderRepository.save(order);
 
@@ -96,10 +105,10 @@ public class OrderServiceImpl implements OrderService {
         try {
             new Thread(() -> {
                 try {
-                    studentRepository.findByStudentId(savedOrder.getStudentId()).ifPresent(student -> {
+                    studentRepository.findByStudentId(savedOrder.getStudentId()).ifPresent(studentData -> {
                         emailService.sendOrderInvoiceEmail(
-                                student.getEmail(),
-                                student.getName(),
+                                studentData.getEmail(),
+                                studentData.getName(),
                                 savedOrder.getOrderNumber(),
                                 food.getFoodName(),
                                 savedOrder.getQuantity(),

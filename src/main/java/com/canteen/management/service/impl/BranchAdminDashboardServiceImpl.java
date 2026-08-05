@@ -41,13 +41,13 @@ public class BranchAdminDashboardServiceImpl
                 orderRepository.countByBranchId(branchId));
 
         response.setPendingOrders(
-                orderRepository.countByBranchIdAndStatus(
+                orderRepository.countByBranchIdAndOrderStatus(
                         branchId,
                         "PENDING"
                 ));
 
         response.setCompletedOrders(
-                orderRepository.countByBranchIdAndStatus(
+                orderRepository.countByBranchIdAndOrderStatus(
                         branchId,
                         "COMPLETED"
                 ));

@@ -36,6 +36,10 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             Long branchId
     );
 
+    Long countByBranchId(Long branchId);
+
+    Long countByBranchIdAndStatus(Long branchId, String status);
+
     @Query("""
 SELECT f
 FROM Food f

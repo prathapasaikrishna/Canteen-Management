@@ -19,6 +19,9 @@ public class SuperAdminController {
     public ResponseEntity<SuperAdminLoginResponse> login(
             @RequestBody SuperAdminLoginRequest request) {
 
+        System.out.println(request.getEmail());
+        System.out.println(request.getPassword());
+
         return ResponseEntity.ok(superAdminService.login(request));
     }
 }

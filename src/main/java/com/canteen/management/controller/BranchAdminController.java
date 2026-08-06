@@ -58,12 +58,7 @@ public class BranchAdminController {
         return service.deleteBranchAdmin(id);
     }
 
-    @GetMapping("/dashboard/{branchId}")
-    public AdminDashboardResponse dashboard(
-            @PathVariable Long branchId){
 
-        return adminService.getBranchDashboard(branchId);
-    }
 
     @GetMapping("/orders/today/{branchId}")
     public List<OrderResponse> todayOrders(

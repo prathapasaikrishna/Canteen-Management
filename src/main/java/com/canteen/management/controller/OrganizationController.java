@@ -18,8 +18,9 @@ public class OrganizationController {
     public OrganizationResponse addOrganization(
             @RequestBody OrganizationRequest request) {
 
-        return organizationService.addOrganization(request);
+        System.out.println(request);
 
+        return organizationService.addOrganization(request);
     }
 
 }

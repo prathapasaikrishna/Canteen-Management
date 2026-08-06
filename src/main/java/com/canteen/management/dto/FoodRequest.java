@@ -10,7 +10,7 @@ public class FoodRequest {
     @NotBlank(message = "Food name is required")
     private String foodName;
 
-    @NotBlank(message = "Category is required")
+    @NotNull(message = "Category is required")
     private Long categoryId;
 
     @NotNull(message = "Price is required")

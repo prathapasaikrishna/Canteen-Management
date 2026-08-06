@@ -112,6 +112,15 @@ public class FoodServiceImpl implements FoodService {
             imageUrl = cloudinaryService.uploadImage(image);
         }
 
+        System.out.println("===== ADD FOOD =====");
+        System.out.println(foodRequest.getFoodName());
+        System.out.println(foodRequest.getCategoryId());
+        System.out.println(foodRequest.getOrganizationId());
+        System.out.println(foodRequest.getBranchId());
+        System.out.println("Finding Category...");
+
+
+
         Food food = new Food();
         food.setFoodName(foodRequest.getFoodName());
         Category category = categoryRepository.findById(
@@ -145,6 +154,8 @@ public class FoodServiceImpl implements FoodService {
         );
 
         return mapToResponse(savedFood, "Food Added Successfully");
+
+
     }
 
     @Override

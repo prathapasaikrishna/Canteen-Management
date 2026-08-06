@@ -9,5 +9,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     boolean existsByCategoryCode(String categoryCode);
 
-    List<Category> findByBranchId(Long branchId);
+    List<Category> findByBranch_Id(Long branchId);
 }

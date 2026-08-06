@@ -168,7 +168,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryResponse> getCategoriesByBranch(Long branchId) {
 
-        return categoryRepository.findByBranchId(branchId)
+        return categoryRepository.findByBranch_Id(branchId)
                 .stream()
                 .map(category -> {
 

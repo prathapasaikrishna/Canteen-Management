@@ -19,7 +19,10 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     List<Food> findByQuantityLessThan(Integer quantity);
 
 
-    List<Food> getFoods(Long organizationId, Long branchId);
+    List<Food> findByOrganizationIdAndBranchId(
+            Long organizationId,
+            Long branchId
+    );
 
     Long countByCanteenId(String canteenId);
 

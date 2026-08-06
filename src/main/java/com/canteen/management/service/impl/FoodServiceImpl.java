@@ -107,27 +107,38 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public FoodResponse addFood(FoodRequest foodRequest, MultipartFile image) {
+
+        System.out.println("STEP 1");
+
         String imageUrl = "";
         if (image != null && !image.isEmpty()) {
             imageUrl = cloudinaryService.uploadImage(image);
         }
 
-        System.out.println("===== ADD FOOD =====");
-        System.out.println(foodRequest.getFoodName());
-        System.out.println(foodRequest.getCategoryId());
-        System.out.println(foodRequest.getOrganizationId());
-        System.out.println(foodRequest.getBranchId());
-        System.out.println("Finding Category...");
-
-
+        System.out.println("STEP 2");
 
         Food food = new Food();
+
+        System.out.println("STEP 3");
+
         food.setFoodName(foodRequest.getFoodName());
-        Category category = categoryRepository.findById(
-                        foodRequest.getCategoryId()
-                )
+
+        System.out.println("STEP 4");
+
+        Category category = categoryRepository.findById(foodRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
+        System.out.println("STEP 5");
+
+        food.setCategory(category);
+
+        System.out.println("STEP 6");
+
+        food.setPrice(foodRequest.getPrice());
+
+        System.out.println("STEP 7");
+
+        // మిగతా code అలాగే ఉంచు
 
         food.setCategory(category);
         food.setPrice(foodRequest.getPrice());

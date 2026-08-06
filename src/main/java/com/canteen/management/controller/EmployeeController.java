@@ -6,6 +6,8 @@ import com.canteen.management.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 @CrossOrigin("*")
@@ -17,6 +19,11 @@ public class EmployeeController {
     @PostMapping("/add")
     public EmployeeResponse addEmployee(@RequestBody EmployeeRequest request) {
         return employeeService.addEmployee(request);
+    }
+
+    @GetMapping("/all")
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 
 }

@@ -73,7 +73,28 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeResponse> getAllEmployees() {
-        return null;
+
+        return employeeRepository.findAll()
+                .stream()
+                .map(employee -> new EmployeeResponse(
+
+                        employee.getId(),
+                        employee.getEmployeeCode(),
+                        employee.getName(),
+                        employee.getDesignation(),
+                        employee.getEmail(),
+                        employee.getMobile(),
+
+                        employee.getBranch().getId(),
+                        employee.getBranch().getBranchName(),
+
+                        employee.getBranchAdmin().getId(),
+                        employee.getBranchAdmin().getAdminName(),
+
+                        employee.getStatus()
+
+                ))
+                .toList();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.canteen.management.service.impl;
 
+import com.canteen.management.dto.EmployeeLoginRequest;
+import com.canteen.management.dto.EmployeeLoginResponse;
 import com.canteen.management.dto.EmployeeRequest;
 import com.canteen.management.dto.EmployeeResponse;
 import com.canteen.management.entity.Branch;
@@ -196,5 +198,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 ))
                 .toList();
+    }
+
+    @Override
+    public EmployeeLoginResponse login(EmployeeLoginRequest request) {
+
+        Employee employee = employeeRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        if (!employee.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Invalid Password");
+        }
+
+        EmployeeLoginResponse response = new EmployeeLoginResponse();
+
+        response.setMessage("Login Successful");
+        response.setEmployeeId(employee.getId());
+        response.setEmployeeCode(employee.getEmployeeCode());
+        response.setEmployeeName(employee.getName());
+        response.setDesignation(employee.getDesignation());
+        response.setBranchId(employee.getBranch().getId());
+        response.setBranchName(employee.getBranch().getBranchName());
+
+        // JWT తర్వాత add చేస్తాం
+        response.setToken("");
+
+        return response;
     }
 }

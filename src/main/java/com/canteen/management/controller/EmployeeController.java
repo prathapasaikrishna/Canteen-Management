@@ -1,5 +1,7 @@
 package com.canteen.management.controller;
 
+import com.canteen.management.dto.EmployeeLoginRequest;
+import com.canteen.management.dto.EmployeeLoginResponse;
 import com.canteen.management.dto.EmployeeRequest;
 import com.canteen.management.dto.EmployeeResponse;
 import com.canteen.management.service.EmployeeService;
@@ -49,6 +51,13 @@ public class EmployeeController {
             @PathVariable Long branchId) {
 
         return employeeService.getEmployeesByBranch(branchId);
+    }
+
+    @PostMapping("/login")
+    public EmployeeLoginResponse login(
+            @RequestBody EmployeeLoginRequest request) {
+
+        return employeeService.login(request);
     }
 
 }

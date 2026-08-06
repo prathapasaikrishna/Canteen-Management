@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 "/branch-admin/**"
 
 
+
                         ).permitAll()
 
                         // Everything else requires JWT

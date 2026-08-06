@@ -1,5 +1,7 @@
 package com.canteen.management.service;
 
+import com.canteen.management.dto.EmployeeLoginRequest;
+import com.canteen.management.dto.EmployeeLoginResponse;
 import com.canteen.management.dto.EmployeeRequest;
 import com.canteen.management.dto.EmployeeResponse;
 
@@ -18,4 +20,6 @@ public interface EmployeeService {
     String deleteEmployee(Long id);
 
     List<EmployeeResponse> getEmployeesByBranch(Long branchId);
+
+    EmployeeLoginResponse login(EmployeeLoginRequest request);
 }

@@ -14,4 +14,8 @@ public interface BranchRepository extends JpaRepository<Branch, Long> {
 
     List<Branch> findByOrganizationId(Long organizationId);
 
+
+
+
+
 }

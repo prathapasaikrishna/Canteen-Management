@@ -36,7 +36,9 @@ public class RecommendationServiceImpl implements RecommendationService {
                                 food.getId(),
                                 food.getFoodName(),
                                 food.getImageUrl(),
-                                food.getCategory(),
+                                food.getCategory() != null
+                                        ? food.getCategory().getCategoryName()
+                                        : null,
                                 food.getPrice(),
                                 "Recommended For You"
 

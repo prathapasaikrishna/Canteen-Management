@@ -1,5 +1,6 @@
 package com.canteen.management.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,9 +18,15 @@ public class FoodResponse {
     private Integer quantity;
     private String status;
     private String canteenId;
+
     private Long organizationId;
 
+    private String organizationName;
+
     private Long branchId;
+
+    private String branchName;
+
     private String message;
     private Double averageRating = 0.0;
     private Long totalReviews = 0L;
@@ -27,7 +34,7 @@ public class FoodResponse {
     public FoodResponse(
             Long id,
             String foodName,
-            String category,
+          String category,
             Double price,
             String imageUrl,
             String availableDate,
@@ -39,7 +46,9 @@ public class FoodResponse {
             Double averageRating,
             Long totalReviews,
             Long organizationId,
-            Long branchId
+            String organizationName,
+            Long branchId,
+            String branchName
     ) {
         this.id = id;
         this.foodName = foodName;
@@ -56,8 +65,12 @@ public class FoodResponse {
         this.totalReviews = totalReviews;
 
         this.organizationId = organizationId;
+        this.organizationName = organizationName;
+
         this.branchId = branchId;
+        this.branchName = branchName;
     }
+
 
 
 }

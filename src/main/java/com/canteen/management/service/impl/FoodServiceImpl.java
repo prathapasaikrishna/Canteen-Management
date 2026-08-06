@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 
+import com.canteen.management.entity.Category;
+import com.canteen.management.repository.*;
 import com.canteen.management.service.CloudinaryService;
 import com.canteen.management.service.NotificationService;
-import com.canteen.management.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.canteen.management.dto.FoodRequest;
 import com.canteen.management.dto.FoodResponse;
 import com.canteen.management.entity.Food;
-import com.canteen.management.repository.FoodRepository;
 import com.canteen.management.service.FoodService;
 import org.springframework.web.multipart.MultipartFile;
+import com.canteen.management.entity.Organization;
+import com.canteen.management.entity.Branch;
 
 @Service
 public class FoodServiceImpl implements FoodService {
@@ -22,8 +24,15 @@ public class FoodServiceImpl implements FoodService {
     @Autowired
     private FoodRepository foodRepository;
 
+
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -31,7 +40,41 @@ public class FoodServiceImpl implements FoodService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     private FoodResponse mapToResponse(Food food, String message) {
+
+
+        String organizationName = "";
+
+        String branchName = "";
+
+
+        if(food.getOrganizationId() != null){
+
+            Organization organization =
+                    organizationRepository.findById(food.getOrganizationId())
+                            .orElse(null);
+
+
+            if(organization != null){
+                organizationName = organization.getName();
+            }
+        }
+
+
+        if(food.getBranchId() != null){
+
+            Branch branch =
+                    branchRepository.findById(food.getBranchId())
+                            .orElse(null);
+
+
+            if(branch != null){
+                branchName = branch.getBranchName();
+            }
+        }
         Double avgRating = reviewRepository.getAverageRating(food.getId());
         Long totalRev = reviewRepository.countByFoodId(food.getId());
         
@@ -41,7 +84,9 @@ public class FoodServiceImpl implements FoodService {
         return new FoodResponse(
                 food.getId(),
                 food.getFoodName(),
-                food.getCategory(),
+                food.getCategory() != null
+                        ? food.getCategory().getCategoryName()
+                        : null,
                 food.getPrice(),
                 food.getImageUrl(),
                 food.getAvailableDate(),
@@ -53,7 +98,10 @@ public class FoodServiceImpl implements FoodService {
                 ratingVal,
                 revCount,
                 food.getOrganizationId(),
-                food.getBranchId()
+                organizationName,
+
+                food.getBranchId(),
+                branchName
         );
     }
 
@@ -66,7 +114,13 @@ public class FoodServiceImpl implements FoodService {
 
         Food food = new Food();
         food.setFoodName(foodRequest.getFoodName());
-        food.setCategory(foodRequest.getCategory());
+        Category category = categoryRepository.findById(
+                        foodRequest.getCategoryId()
+                )
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+
+        food.setCategory(category);
         food.setPrice(foodRequest.getPrice());
         food.setImageUrl(imageUrl);
         food.setAvailableDate(foodRequest.getAvailableDate());

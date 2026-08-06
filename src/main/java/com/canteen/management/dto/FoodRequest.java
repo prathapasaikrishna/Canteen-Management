@@ -11,7 +11,7 @@ public class FoodRequest {
     private String foodName;
 
     @NotBlank(message = "Category is required")
-    private String category;
+    private Long categoryId;
 
     @NotNull(message = "Price is required")
     private Double price;

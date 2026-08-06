@@ -26,4 +26,29 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+    @GetMapping("/{id}")
+    public EmployeeResponse getEmployeeById(@PathVariable Long id) {
+        return employeeService.getEmployeeById(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public EmployeeResponse updateEmployee(
+            @PathVariable Long id,
+            @RequestBody EmployeeRequest request) {
+
+        return employeeService.updateEmployee(id, request);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteEmployee(@PathVariable Long id) {
+        return employeeService.deleteEmployee(id);
+    }
+
+    @GetMapping("/branch/{branchId}")
+    public List<EmployeeResponse> getEmployeesByBranch(
+            @PathVariable Long branchId) {
+
+        return employeeService.getEmployeesByBranch(branchId);
+    }
+
 }

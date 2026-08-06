@@ -99,21 +99,102 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse getEmployeeById(Long id) {
-        return null;
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        return new EmployeeResponse(
+
+                employee.getId(),
+                employee.getEmployeeCode(),
+                employee.getName(),
+                employee.getDesignation(),
+                employee.getEmail(),
+                employee.getMobile(),
+
+                employee.getBranch().getId(),
+                employee.getBranch().getBranchName(),
+
+                employee.getBranchAdmin().getId(),
+                employee.getBranchAdmin().getAdminName(),
+
+                employee.getStatus()
+        );
     }
 
     @Override
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
-        return null;
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        Branch branch = branchRepository.findById(request.getBranchId())
+                .orElseThrow(() -> new RuntimeException("Branch not found"));
+
+        BranchAdmin branchAdmin = branchAdminRepository.findById(request.getBranchAdminId())
+                .orElseThrow(() -> new RuntimeException("Branch Admin not found"));
+
+        employee.setEmployeeCode(request.getEmployeeCode());
+        employee.setName(request.getName());
+        employee.setDesignation(request.getDesignation());
+        employee.setEmail(request.getEmail());
+        employee.setMobile(request.getMobile());
+        employee.setPassword(request.getPassword());
+
+        employee.setBranch(branch);
+        employee.setBranchAdmin(branchAdmin);
+
+        Employee updated = employeeRepository.save(employee);
+
+        return new EmployeeResponse(
+                updated.getId(),
+                updated.getEmployeeCode(),
+                updated.getName(),
+                updated.getDesignation(),
+                updated.getEmail(),
+                updated.getMobile(),
+                updated.getBranch().getId(),
+                updated.getBranch().getBranchName(),
+                updated.getBranchAdmin().getId(),
+                updated.getBranchAdmin().getAdminName(),
+                updated.getStatus()
+        );
     }
 
     @Override
     public String deleteEmployee(Long id) {
-        return null;
+
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        employeeRepository.delete(employee);
+
+        return "Employee Deleted Successfully";
     }
 
     @Override
     public List<EmployeeResponse> getEmployeesByBranch(Long branchId) {
-        return null;
+
+        return employeeRepository.findByBranchId(branchId)
+                .stream()
+                .map(employee -> new EmployeeResponse(
+
+                        employee.getId(),
+                        employee.getEmployeeCode(),
+                        employee.getName(),
+                        employee.getDesignation(),
+                        employee.getEmail(),
+                        employee.getMobile(),
+
+                        employee.getBranch().getId(),
+                        employee.getBranch().getBranchName(),
+
+                        employee.getBranchAdmin().getId(),
+                        employee.getBranchAdmin().getAdminName(),
+
+                        employee.getStatus()
+
+                ))
+                .toList();
     }
 }

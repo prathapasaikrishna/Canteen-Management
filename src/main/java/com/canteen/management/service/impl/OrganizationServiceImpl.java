@@ -61,9 +61,26 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<OrganizationResponse> getAllOrganizations() {
-        return null;
-    }
 
+        return organizationRepository.findAll()
+                .stream()
+                .map(org -> new OrganizationResponse(
+                        org.getId(),
+                        org.getOrganizationCode(),
+                        org.getName(),
+                        org.getType(),
+                        org.getEmail(),
+                        org.getPhone(),
+                        org.getAddress(),
+                        org.getCity(),
+                        org.getState(),
+                        org.getCountry(),
+                        org.getPincode(),
+                        org.getLogoUrl(),
+                        org.getStatus()
+                ))
+                .toList();
+    }
     @Override
     public OrganizationResponse getOrganizationById(Long id) {
         return null;

@@ -108,13 +108,51 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
     @Override
-    public OrganizationResponse updateOrganization(Long id,
-                                                   OrganizationRequest request) {
-        return null;
-    }
+    public OrganizationResponse updateOrganization(Long id, OrganizationRequest request) {
 
+        Organization organization = organizationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+        organization.setOrganizationCode(request.getOrganizationCode());
+        organization.setName(request.getName());
+        organization.setType(request.getType());
+        organization.setEmail(request.getEmail());
+        organization.setPhone(request.getPhone());
+        organization.setAddress(request.getAddress());
+        organization.setCity(request.getCity());
+        organization.setState(request.getState());
+        organization.setCountry(request.getCountry());
+        organization.setPincode(request.getPincode());
+        organization.setLogoUrl(request.getLogoUrl());
+
+        Organization updated = organizationRepository.save(organization);
+
+        return new OrganizationResponse(
+                updated.getId(),
+                updated.getOrganizationCode(),
+                updated.getName(),
+                updated.getType(),
+                updated.getEmail(),
+                updated.getPhone(),
+                updated.getAddress(),
+                updated.getCity(),
+                updated.getState(),
+                updated.getCountry(),
+                updated.getPincode(),
+                updated.getLogoUrl(),
+                updated.getStatus()
+        );
+    }
     @Override
     public String deleteOrganization(Long id) {
-        return null;
+
+        Organization organization = organizationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+        organization.setStatus("INACTIVE");
+
+        organizationRepository.save(organization);
+
+        return "Organization deleted successfully";
     }
 }

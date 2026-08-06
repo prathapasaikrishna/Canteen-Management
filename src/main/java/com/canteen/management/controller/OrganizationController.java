@@ -35,4 +35,19 @@ public class OrganizationController {
         return organizationService.getOrganizationById(id);
     }
 
+    @PutMapping("/update/{id}")
+    public OrganizationResponse updateOrganization(
+            @PathVariable Long id,
+            @RequestBody OrganizationRequest request) {
+
+        return organizationService.updateOrganization(id, request);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteOrganization(@PathVariable Long id) {
+
+        return organizationService.deleteOrganization(id);
+
+    }
+
 }

@@ -213,14 +213,25 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeLoginResponse response = new EmployeeLoginResponse();
 
         response.setMessage("Login Successful");
+
         response.setEmployeeId(employee.getId());
         response.setEmployeeCode(employee.getEmployeeCode());
         response.setEmployeeName(employee.getName());
         response.setDesignation(employee.getDesignation());
+        response.setEmail(employee.getEmail());
+
         response.setBranchId(employee.getBranch().getId());
         response.setBranchName(employee.getBranch().getBranchName());
 
-        // JWT తర్వాత add చేస్తాం
+        response.setStatus(employee.getStatus());
+
+// Organization entity Branch లో ఉంటే
+        response.setOrganizationId(
+                employee.getBranch()
+                        .getOrganization()
+                        .getId()
+        );
+
         response.setToken("");
 
         return response;

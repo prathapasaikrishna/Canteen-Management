@@ -55,7 +55,8 @@ public class SecurityConfig {
                                 "/error",
                                 "/uploads/**",
                                 "/super-admin/**",
-                                "/branch-admin/**"
+                                "/branch-admin/**",
+                                "/category/**"
 
 
 

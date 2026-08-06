@@ -22,6 +22,8 @@ public class Food {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    private String categoryName;
+
 
     @Column(nullable = false)
     private Double price;

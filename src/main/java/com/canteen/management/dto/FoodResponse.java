@@ -34,7 +34,7 @@ public class FoodResponse {
     public FoodResponse(
             Long id,
             String foodName,
-          String category,
+            String category,
             Double price,
             String imageUrl,
             String availableDate,
@@ -50,6 +50,7 @@ public class FoodResponse {
             Long branchId,
             String branchName
     ) {
+
         this.id = id;
         this.foodName = foodName;
         this.category = category;
@@ -63,14 +64,10 @@ public class FoodResponse {
         this.message = message;
         this.averageRating = averageRating;
         this.totalReviews = totalReviews;
-
         this.organizationId = organizationId;
         this.organizationName = organizationName;
-
         this.branchId = branchId;
         this.branchName = branchName;
     }
-
-
 
 }

@@ -209,7 +209,7 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public List<FoodResponse> getFoodByCategory(String category) {
         List<Food> foods =
-                foodRepository.findByCategory_NameIgnoreCase(category);
+                foodRepository.findByCategory_CategoryNameIgnoreCase(category);
         List<FoodResponse> responseList = new ArrayList<>();
         for (Food food : foods) {
             responseList.add(mapToResponse(food, "Success"));

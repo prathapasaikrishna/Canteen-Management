@@ -1,66 +1,29 @@
 package com.canteen.management.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 import com.canteen.management.entity.Food;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
-import java.util.Optional;
 
-@Repository
 public interface FoodRepository extends JpaRepository<Food, Long> {
+
 
     List<Food> findByFoodNameContainingIgnoreCase(String foodName);
 
-    List<Food> findByCategory_NameIgnoreCase(String name);
 
-    List<Food> findByAvailableDate(String availableDate);
+    List<Food> findByCategory_CategoryNameIgnoreCase(String categoryName);
+
+
+    List<Food> findByAvailableDate(String date);
+
 
     List<Food> findByQuantityLessThan(Integer quantity);
 
-    List<Food> findByCanteenId(String canteenId);
+
+    List<Food> getFoods(Long organizationId, Long branchId);
 
     Long countByCanteenId(String canteenId);
 
-    Optional<Food> findById(Long id);
-
-    List<Food> findByBranchId(Long branchId);
-
-    List<Food> findByOrganizationId(Long organizationId);
-
-    List<Food> findByOrganizationIdAndBranchId(
-            Long organizationId,
-            Long branchId
-    );
-
     Long countByBranchId(Long branchId);
 
-    Long countByBranchIdAndStatus(Long branchId, String status);
-
-    @Query("""
-SELECT f
-FROM Food f
-WHERE f.organizationId = :organizationId
-AND f.branchId = :branchId
-""")
-    List<Food> getFoods(
-            @Param("organizationId") Long organizationId,
-            @Param("branchId") Long branchId
-    );
-
-
-    @Query(value = """
-SELECT *
-FROM food
-WHERE organization_id = :organizationId
-AND branch_id = :branchId
-""", nativeQuery = true)
-    List<Food> testFoods(
-            @Param("organizationId") Long organizationId,
-            @Param("branchId") Long branchId
-    );
-
+    Long countByBranchIdAndStatus(Long branchId, String available);
 }

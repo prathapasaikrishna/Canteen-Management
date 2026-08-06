@@ -156,17 +156,19 @@ public class FoodServiceImpl implements FoodService {
         food.setBranchId(
                 foodRequest.getBranchId()
         );
-
+        System.out.println("STEP 8");
         Food savedFood = foodRepository.save(food);
+
+        System.out.println("STEP 9");
 
         notificationService.notifyAllStudents(
                 "🍔 New Food Available",
                 savedFood.getFoodName() + " is Available Today."
         );
 
+        System.out.println("STEP 10");
+
         return mapToResponse(savedFood, "Food Added Successfully");
-
-
     }
 
     @Override

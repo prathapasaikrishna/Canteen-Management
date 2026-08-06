@@ -30,4 +30,9 @@ public class OrganizationController {
         return organizationService.getAllOrganizations();
     }
 
+    @GetMapping("/{id}")
+    public OrganizationResponse getOrganizationById(@PathVariable Long id) {
+        return organizationService.getOrganizationById(id);
+    }
+
 }

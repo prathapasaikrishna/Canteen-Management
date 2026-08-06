@@ -81,10 +81,31 @@ public class OrganizationServiceImpl implements OrganizationService {
                 ))
                 .toList();
     }
+
+
     @Override
     public OrganizationResponse getOrganizationById(Long id) {
-        return null;
+
+        Organization organization = organizationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+        return new OrganizationResponse(
+                organization.getId(),
+                organization.getOrganizationCode(),
+                organization.getName(),
+                organization.getType(),
+                organization.getEmail(),
+                organization.getPhone(),
+                organization.getAddress(),
+                organization.getCity(),
+                organization.getState(),
+                organization.getCountry(),
+                organization.getPincode(),
+                organization.getLogoUrl(),
+                organization.getStatus()
+        );
     }
+
 
     @Override
     public OrganizationResponse updateOrganization(Long id,

@@ -37,6 +37,8 @@ public class Branch {
 
     private String logoUrl;
 
+
+
     @Column(nullable = false)
     private String status = "ACTIVE";
 

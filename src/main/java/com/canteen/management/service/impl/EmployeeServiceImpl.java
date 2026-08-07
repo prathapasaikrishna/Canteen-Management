@@ -10,8 +10,10 @@ import com.canteen.management.entity.Employee;
 import com.canteen.management.repository.BranchAdminRepository;
 import com.canteen.management.repository.BranchRepository;
 import com.canteen.management.repository.EmployeeRepository;
+import com.canteen.management.security.JwtUtil;
 import com.canteen.management.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private BranchRepository branchRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private BranchAdminRepository branchAdminRepository;
@@ -52,7 +60,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setDesignation(request.getDesignation());
         employee.setEmail(request.getEmail());
         employee.setMobile(request.getMobile());
-        employee.setPassword(request.getPassword());
+        employee.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
         employee.setBranch(branch);
         employee.setBranchAdmin(branchAdmin);
 
@@ -141,7 +151,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setDesignation(request.getDesignation());
         employee.setEmail(request.getEmail());
         employee.setMobile(request.getMobile());
-        employee.setPassword(request.getPassword());
+        employee.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
 
         employee.setBranch(branch);
         employee.setBranchAdmin(branchAdmin);
@@ -169,7 +181,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        employeeRepository.delete(employee);
+        employee.setStatus("INACTIVE");
+
+        employeeRepository.save(employee);
 
         return "Employee Deleted Successfully";
     }
@@ -206,11 +220,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        if (!employee.getPassword().equals(request.getPassword())) {
+        if(!employee.getStatus().equals("ACTIVE")){
+
+            throw new RuntimeException(
+                    "Employee Disabled"
+            );
+        }
+
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                employee.getPassword())) {
+
             throw new RuntimeException("Invalid Password");
         }
 
         EmployeeLoginResponse response = new EmployeeLoginResponse();
+
+        String token =
+                jwtUtil.generateToken(employee.getEmail());
+
+        response.setToken(token);
 
         response.setMessage("Login Successful");
 

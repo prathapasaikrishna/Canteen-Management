@@ -4,6 +4,7 @@ import com.canteen.management.dto.OrganizationRequest;
 import com.canteen.management.dto.OrganizationResponse;
 import com.canteen.management.entity.Organization;
 import com.canteen.management.repository.OrganizationRepository;
+import com.canteen.management.service.AuditLogService;
 import com.canteen.management.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @Override
     public OrganizationResponse addOrganization(OrganizationRequest request) {
@@ -42,6 +46,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization savedOrganization =
                 organizationRepository.save(organization);
 
+        auditLogService.saveLog(
+                "SUPER_ADMIN",
+                "SUPER_ADMIN",
+                "CREATE_ORGANIZATION",
+                "Organization Created : " + savedOrganization.getName(),
+                savedOrganization.getId(),
+                null
+        );
+
         return new OrganizationResponse(
                 savedOrganization.getId(),
                 savedOrganization.getOrganizationCode(),
@@ -57,6 +70,8 @@ public class OrganizationServiceImpl implements OrganizationService {
                 savedOrganization.getLogoUrl(),
                 savedOrganization.getStatus()
         );
+
+
     }
 
     @Override
@@ -127,6 +142,17 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Organization updated = organizationRepository.save(organization);
 
+        auditLogService.saveLog(
+                "SUPER_ADMIN",
+                "SUPER_ADMIN",
+                "UPDATE_ORGANIZATION",
+                "Organization Updated : " + updated.getName(),
+                updated.getId(),
+                null
+        );
+
+
+
         return new OrganizationResponse(
                 updated.getId(),
                 updated.getOrganizationCode(),
@@ -146,8 +172,20 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public String deleteOrganization(Long id) {
 
+
+
         Organization organization = organizationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+        auditLogService.saveLog(
+                "SUPER_ADMIN",
+                "SUPER_ADMIN",
+                "DELETE_ORGANIZATION",
+                "Organization Deleted : " + organization.getName(),
+                organization.getId(),
+                null
+        );
+
 
         organization.setStatus("INACTIVE");
 

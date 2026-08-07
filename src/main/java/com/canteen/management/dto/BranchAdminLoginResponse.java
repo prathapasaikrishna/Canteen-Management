@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class BranchAdminLoginResponse {
 
+    private String token;
+
     private Long id;
 
     private Long organizationId;
@@ -20,5 +22,4 @@ public class BranchAdminLoginResponse {
     private String status;
 
     private String message;
-
 }

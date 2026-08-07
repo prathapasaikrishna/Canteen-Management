@@ -3,9 +3,16 @@ package com.canteen.management.service.impl;
 import com.canteen.management.dto.*;
 import com.canteen.management.entity.BranchAdmin;
 import com.canteen.management.repository.BranchAdminRepository;
+import com.canteen.management.security.JwtUtil;
 import com.canteen.management.service.BranchAdminService;
+import com.canteen.management.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.canteen.management.entity.Order;
+import com.canteen.management.repository.OrderRepository;
+
+import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +23,37 @@ public class BranchAdminServiceImpl implements BranchAdminService {
     @Autowired
     private BranchAdminRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
     public BranchAdminResponse addBranchAdmin(BranchAdminRequest request) {
 
         BranchAdmin admin = new BranchAdmin();
 
+        if(repository.findByEmail(request.getEmail()).isPresent()){
+
+            throw new RuntimeException(
+                    "Email already exists"
+            );
+        }
+
         admin.setOrganizationId(request.getOrganizationId());
         admin.setBranchId(request.getBranchId());
         admin.setAdminName(request.getAdminName());
         admin.setEmail(request.getEmail());
-        admin.setPassword(request.getPassword());
+        admin.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
         admin.setMobile(request.getMobile());
         admin.setRole(request.getRole());
         admin.setStatus(request.getStatus());
@@ -59,7 +87,9 @@ public class BranchAdminServiceImpl implements BranchAdminService {
         admin.setBranchId(request.getBranchId());
         admin.setAdminName(request.getAdminName());
         admin.setEmail(request.getEmail());
-        admin.setPassword(request.getPassword());
+        admin.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
         admin.setMobile(request.getMobile());
         admin.setRole(request.getRole());
         admin.setStatus(request.getStatus());
@@ -84,7 +114,14 @@ public class BranchAdminServiceImpl implements BranchAdminService {
     @Override
     public String deleteBranchAdmin(Long id) {
 
-        repository.deleteById(id);
+        BranchAdmin admin =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException("Branch Admin Not Found"));
+
+        admin.setStatus("INACTIVE");
+
+        repository.save(admin);
 
         return "Branch Admin Deleted Successfully";
     }
@@ -146,16 +183,35 @@ public class BranchAdminServiceImpl implements BranchAdminService {
     public BranchAdminLoginResponse login(
             BranchAdminLoginRequest request) {
 
+
+
         BranchAdmin admin = repository.findByEmail(request.getEmail())
                 .orElseThrow(() ->
                         new RuntimeException("Invalid Email"));
 
-        if (!admin.getPassword().equals(request.getPassword())) {
+        if(!admin.getStatus().equals("ACTIVE")){
+            throw new RuntimeException(
+                    "Account Disabled"
+            );
+
+
+        }
+
+        if(!passwordEncoder.matches(
+                request.getPassword(),
+                admin.getPassword())){
+
             throw new RuntimeException("Invalid Password");
         }
 
+
         BranchAdminLoginResponse response =
                 new BranchAdminLoginResponse();
+
+        String token =
+                jwtUtil.generateToken(admin.getEmail());
+
+        response.setToken(token);
 
         response.setId(admin.getId());
         response.setOrganizationId(admin.getOrganizationId());
@@ -167,40 +223,132 @@ public class BranchAdminServiceImpl implements BranchAdminService {
         response.setMessage("Login Successful");
 
         return response;
+
+
     }
 
     @Override
     public List<OrderResponse> getTodayOrders(Long branchId) {
-        return List.of();
+
+        List<Order> orders =
+                orderRepository.findByBranchIdAndOrderDate(
+                        branchId,
+                        LocalDate.now().toString()
+                );
+
+        return orders.stream()
+                .map(order -> new OrderResponse(
+                        order.getId(),
+                        order.getOrderNumber(),
+                        order.getStudentId(),
+                        order.getFoodId(),
+                        order.getQuantity(),
+                        order.getTotalPrice(),
+                        order.getOrderDate(),
+                        order.getOrderStatus(),
+                        order.getQrCode(),
+                        order.getPaymentStatus(),
+                        order.getCanteenId(),
+                        "Success",
+                        order.getPaymentMethod()
+                ))
+                .toList();
     }
+
 
     @Override
     public List<OrderResponse> getPendingOrders(Long branchId) {
-        return List.of();
+
+        return orderRepository
+                .findByBranchIdAndOrderStatus(
+                        branchId,
+                        "PLACED"
+                )
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     @Override
     public List<OrderResponse> getPreparingOrders(Long branchId) {
-        return List.of();
+
+        return orderRepository
+                .findByBranchIdAndOrderStatus(
+                        branchId,
+                        "PREPARING"
+                )
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     @Override
     public List<OrderResponse> getReadyOrders(Long branchId) {
-        return List.of();
+
+        return orderRepository
+                .findByBranchIdAndOrderStatus(
+                        branchId,
+                        "READY"
+                )
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     @Override
     public List<OrderResponse> getCollectedOrders(Long branchId) {
-        return List.of();
+
+        return orderRepository
+                .findByBranchIdAndOrderStatus(
+                        branchId,
+                        "COLLECTED"
+                )
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     @Override
     public List<OrderResponse> getCancelledOrders(Long branchId) {
-        return List.of();
+
+        return orderRepository
+                .findByBranchIdAndOrderStatus(
+                        branchId,
+                        "CANCELLED"
+                )
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    private OrderResponse convertToResponse(Order order){
+
+        return new OrderResponse(
+
+                order.getId(),
+                order.getOrderNumber(),
+                order.getStudentId(),
+                order.getFoodId(),
+                order.getQuantity(),
+                order.getTotalPrice(),
+                order.getOrderDate(),
+                order.getOrderStatus(),
+                order.getQrCode(),
+                order.getPaymentStatus(),
+                order.getCanteenId(),
+                "Success",
+                order.getPaymentMethod()
+        );
     }
 
     @Override
     public OrderResponse updateOrderStatus(UpdateOrderStatusRequest request) {
-        return null;
+
+
+        return orderService.updateOrderStatus(
+                request.getOrderId(),
+                request.getStatus()
+        );
+
     }
 }

@@ -4,6 +4,7 @@ import com.canteen.management.dto.BranchRequest;
 import com.canteen.management.dto.BranchResponse;
 import com.canteen.management.repository.BranchRepository;
 import com.canteen.management.repository.OrganizationRepository;
+import com.canteen.management.service.AuditLogService;
 import com.canteen.management.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class BranchServiceImpl implements BranchService {
 
     @Autowired
     private BranchRepository branchRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -47,21 +51,32 @@ public class BranchServiceImpl implements BranchService {
         branch.setLogoUrl(request.getLogoUrl());
         branch.setOrganization(organization);
 
-        Branch saved = branchRepository.save(branch);
+        Branch savedBranch = branchRepository.save(branch);
+
+        auditLogService.saveLog(
+                "SUPER_ADMIN",
+                "SUPER_ADMIN",
+                "CREATE_BRANCH",
+                "Branch Created : " + savedBranch.getBranchName(),
+                savedBranch.getOrganization().getId(),
+                savedBranch.getId()
+        );
+
+
 
         return new BranchResponse(
-                saved.getId(),
-                saved.getBranchCode(),
-                saved.getBranchName(),
-                saved.getAddress(),
-                saved.getCity(),
-                saved.getState(),
-                saved.getCountry(),
-                saved.getPincode(),
-                saved.getPhone(),
-                saved.getEmail(),
-                saved.getLogoUrl(),
-                saved.getStatus(),
+                savedBranch.getId(),
+                savedBranch.getBranchCode(),
+                savedBranch.getBranchName(),
+                savedBranch.getAddress(),
+                savedBranch.getCity(),
+                savedBranch.getState(),
+                savedBranch.getCountry(),
+                savedBranch.getPincode(),
+                savedBranch.getPhone(),
+                savedBranch.getEmail(),
+                savedBranch.getLogoUrl(),
+                savedBranch.getStatus(),
                 organization.getId(),
                 organization.getName()
         );

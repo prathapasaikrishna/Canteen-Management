@@ -97,6 +97,13 @@ public class StudentServiceImpl implements StudentService {
                         loginRequest.getPassword(),
                         student.getPassword()
                 )) {
+
+            if (!"ACTIVE".equalsIgnoreCase(student.getAccountStatus())) {
+                return new LoginResponse(
+                        "Account is " + student.getAccountStatus(),
+                        ""
+                );
+            }
             
             // Save FCM Token if available
             if (loginRequest.getFcmToken() != null &&

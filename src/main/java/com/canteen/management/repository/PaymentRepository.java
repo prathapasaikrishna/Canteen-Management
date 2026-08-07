@@ -17,19 +17,4 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     Optional<Payment> findByPaymentId(String paymentId);
 
-    Long countByBranchId(Long branchId);
-
-    List<Payment> findByBranchId(Long branchId);
-
-    List<Payment> findByOrganizationId(Long organizationId);
-
-    Double sumAmountByBranchId(Long branchId);
-
-    @Query("""
-SELECT COALESCE(SUM(p.amount),0)
-FROM Payment p
-WHERE p.branchId = :branchId
-""")
-    Double getTotalRevenue(@Param("branchId") Long branchId);
-
 }

@@ -6,6 +6,7 @@ import com.canteen.management.repository.BranchAdminRepository;
 import com.canteen.management.security.JwtUtil;
 import com.canteen.management.service.BranchAdminService;
 import com.canteen.management.service.OrderService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,16 @@ public class BranchAdminServiceImpl implements BranchAdminService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+
+
+
+    @PostConstruct
+    public void testPassword(){
+        System.out.println(
+                passwordEncoder.encode("123456")
+        );
+    }
 
     @Override
     public BranchAdminResponse addBranchAdmin(BranchAdminRequest request) {

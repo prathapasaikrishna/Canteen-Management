@@ -25,7 +25,7 @@ public class Category {
     @Column(nullable = false)
     private String categoryName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String categoryCode;
 
     private String description;

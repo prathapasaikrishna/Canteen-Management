@@ -107,94 +107,110 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public FoodResponse addFood(FoodRequest foodRequest, MultipartFile image) {
+        try {
+            System.out.println("STEP 1");
 
-        System.out.println("STEP 1");
+            String imageUrl = "";
+            if (image != null && !image.isEmpty()) {
+                imageUrl = cloudinaryService.uploadImage(image);
+            }
 
-        String imageUrl = "";
-        if (image != null && !image.isEmpty()) {
-            imageUrl = cloudinaryService.uploadImage(image);
-        }
+            System.out.println("STEP 2");
 
-        System.out.println("STEP 2");
+            Food food = new Food();
 
-        Food food = new Food();
+            System.out.println("STEP 3");
 
-        System.out.println("STEP 3");
+            food.setFoodName(foodRequest.getFoodName());
 
-        food.setFoodName(foodRequest.getFoodName());
+            System.out.println("STEP 4");
 
-        System.out.println("STEP 4");
-
-        Category category = null;
-        if (foodRequest.getCategoryId() != null) {
-            category = categoryRepository.findById(foodRequest.getCategoryId()).orElse(null);
-        }
-        if (category == null && foodRequest.getCategory() != null && !foodRequest.getCategory().trim().isEmpty()) {
-            String catName = foodRequest.getCategory().trim();
-            category = categoryRepository.findByCategoryName(catName).orElse(null);
-            if (category == null) {
-                category = new Category();
-                category.setCategoryName(catName);
-                category.setCategoryCode(catName.toUpperCase().replaceAll("\\s+", "_"));
-                if (foodRequest.getBranchId() != null) {
-                    Branch branch = branchRepository.findById(foodRequest.getBranchId()).orElse(null);
-                    category.setBranch(branch);
+            Category category = null;
+            if (foodRequest.getCategoryId() != null) {
+                category = categoryRepository.findById(foodRequest.getCategoryId()).orElse(null);
+            }
+            if (category == null && foodRequest.getCategory() != null && !foodRequest.getCategory().trim().isEmpty()) {
+                String catName = foodRequest.getCategory().trim();
+                // Search globally case-insensitively to reuse
+                List<Category> globalOrgs = categoryRepository.findByCategoryNameIgnoreCase(catName);
+                if (!globalOrgs.isEmpty()) {
+                    category = globalOrgs.get(0);
+                } else {
+                    // Create a unique-safe new category
+                    category = new Category();
+                    category.setCategoryName(catName);
+                    category.setCategoryCode(catName.toUpperCase().replaceAll("\\s+", "_") + "_" + System.currentTimeMillis());
+                    if (foodRequest.getBranchId() != null) {
+                        Branch branch = branchRepository.findById(foodRequest.getBranchId()).orElse(null);
+                        category.setBranch(branch);
+                    }
+                    if (foodRequest.getOrganizationId() != null) {
+                        Organization org = organizationRepository.findById(foodRequest.getOrganizationId()).orElse(null);
+                        category.setOrganization(org);
+                    }
+                    category = categoryRepository.save(category);
                 }
-                category = categoryRepository.save(category);
             }
-        }
-        if (category == null) {
-            String defaultCat = "General";
-            category = categoryRepository.findByCategoryName(defaultCat).orElse(null);
             if (category == null) {
-                category = new Category();
-                category.setCategoryName(defaultCat);
-                category.setCategoryCode("GENERAL");
-                category = categoryRepository.save(category);
+                String defaultCat = "General";
+                List<Category> existing = categoryRepository.findByCategoryNameIgnoreCase(defaultCat);
+                if (!existing.isEmpty()) {
+                    category = existing.get(0);
+                } else {
+                    category = new Category();
+                    category.setCategoryName(defaultCat);
+                    category.setCategoryCode("GENERAL_" + System.currentTimeMillis());
+                    category = categoryRepository.save(category);
+                }
             }
+
+            System.out.println("STEP 5");
+
+            food.setCategory(category);
+
+            System.out.println("STEP 6");
+
+            food.setPrice(foodRequest.getPrice());
+
+            System.out.println("STEP 7");
+
+            food.setCategory(category);
+            food.setPrice(foodRequest.getPrice());
+            food.setImageUrl(imageUrl);
+            food.setAvailableDate(foodRequest.getAvailableDate());
+            food.setAvailableTime(foodRequest.getAvailableTime());
+            food.setQuantity(foodRequest.getQuantity());
+            food.setStatus(foodRequest.getStatus());
+            food.setCanteenId(foodRequest.getCanteenId());
+
+            food.setOrganizationId(
+                    foodRequest.getOrganizationId()
+            );
+
+            food.setBranchId(
+                    foodRequest.getBranchId()
+            );
+            System.out.println("STEP 8");
+            Food savedFood = foodRepository.save(food);
+
+            System.out.println("STEP 9");
+
+            try {
+                notificationService.notifyAllStudents(
+                        "🍔 New Food Available",
+                        savedFood.getFoodName() + " is Available Today."
+                );
+            } catch (Exception e) {
+                System.err.println("FCM Notification failed but food is saved: " + e.getMessage());
+            }
+
+            System.out.println("STEP 10");
+
+            return mapToResponse(savedFood, "Food Added Successfully");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Food addition failed: " + ex.getMessage(), ex);
         }
-
-        System.out.println("STEP 5");
-
-        food.setCategory(category);
-
-        System.out.println("STEP 6");
-
-        food.setPrice(foodRequest.getPrice());
-
-        System.out.println("STEP 7");
-
-        // మిగతా code అలాగే ఉంచు
-
-        food.setCategory(category);
-        food.setPrice(foodRequest.getPrice());
-        food.setImageUrl(imageUrl);
-        food.setAvailableDate(foodRequest.getAvailableDate());
-        food.setAvailableTime(foodRequest.getAvailableTime());
-        food.setQuantity(foodRequest.getQuantity());
-        food.setStatus(foodRequest.getStatus());
-        food.setCanteenId(foodRequest.getCanteenId());
-
-        food.setOrganizationId(
-                foodRequest.getOrganizationId()
-        );
-
-        food.setBranchId(
-                foodRequest.getBranchId()
-        );
-        System.out.println("STEP 8");
-        Food savedFood = foodRepository.save(food);
-
-        System.out.println("STEP 9");
-
-        notificationService.notifyAllStudents(
-                "🍔 New Food Available",
-                savedFood.getFoodName() + " is Available Today."
-        );
-
-        System.out.println("STEP 10");
-
-        return mapToResponse(savedFood, "Food Added Successfully");
     }
 
     @Override

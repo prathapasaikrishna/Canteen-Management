@@ -200,12 +200,10 @@ public class BranchAdminServiceImpl implements BranchAdminService {
                 .orElseThrow(() ->
                         new RuntimeException("Invalid Email"));
 
-        if(!admin.getStatus().equals("ACTIVE")){
+        if(admin.getStatus() == null || !admin.getStatus().equalsIgnoreCase("ACTIVE")){
             throw new RuntimeException(
                     "Account Disabled"
             );
-
-
         }
 
         if(!passwordEncoder.matches(

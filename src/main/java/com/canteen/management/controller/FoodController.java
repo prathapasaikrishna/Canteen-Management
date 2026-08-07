@@ -27,7 +27,7 @@ public class FoodController {
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FoodResponse addFood(
             @RequestPart("food") String foodJson,
-            @RequestParam(value = "image", required = false) MultipartFile image) throws Exception {
+            @RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
 
         com.fasterxml.jackson.databind.ObjectMapper mapper =
                 new com.fasterxml.jackson.databind.ObjectMapper()
@@ -55,7 +55,7 @@ public class FoodController {
     public ResponseEntity<FoodResponse> updateFood(
             @PathVariable Long id,
             @RequestPart("food") String foodJson,
-            @RequestParam(value = "image", required = false) MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) throws Exception {
 
         System.out.println("==================================================");

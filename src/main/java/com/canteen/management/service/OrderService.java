@@ -17,5 +17,9 @@ public interface OrderService {
 
     void deleteOrder(Long id);
 
+    public List<OrderResponse> getOrdersByBranch(
+            Long organizationId,
+            Long branchId);
+
 
 }

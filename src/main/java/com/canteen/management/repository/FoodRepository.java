@@ -24,6 +24,12 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
             Long branchId
     );
 
+    List<Food> findByOrganizationIdAndBranchIdAndStatus(
+            Long organizationId,
+            Long branchId,
+            String status
+    );
+
     Long countByCanteenId(String canteenId);
 
     Long countByBranchId(Long branchId);

@@ -125,8 +125,34 @@ public class FoodServiceImpl implements FoodService {
 
         System.out.println("STEP 4");
 
-        Category category = categoryRepository.findById(foodRequest.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = null;
+        if (foodRequest.getCategoryId() != null) {
+            category = categoryRepository.findById(foodRequest.getCategoryId()).orElse(null);
+        }
+        if (category == null && foodRequest.getCategory() != null && !foodRequest.getCategory().trim().isEmpty()) {
+            String catName = foodRequest.getCategory().trim();
+            category = categoryRepository.findByCategoryName(catName).orElse(null);
+            if (category == null) {
+                category = new Category();
+                category.setCategoryName(catName);
+                category.setCategoryCode(catName.toUpperCase().replaceAll("\\s+", "_"));
+                if (foodRequest.getBranchId() != null) {
+                    Branch branch = branchRepository.findById(foodRequest.getBranchId()).orElse(null);
+                    category.setBranch(branch);
+                }
+                category = categoryRepository.save(category);
+            }
+        }
+        if (category == null) {
+            String defaultCat = "General";
+            category = categoryRepository.findByCategoryName(defaultCat).orElse(null);
+            if (category == null) {
+                category = new Category();
+                category.setCategoryName(defaultCat);
+                category.setCategoryCode("GENERAL");
+                category = categoryRepository.save(category);
+            }
+        }
 
         System.out.println("STEP 5");
 
@@ -193,6 +219,13 @@ public class FoodServiceImpl implements FoodService {
         Food food = foodRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Food Not Found"));
 
+        if (!food.getOrganizationId().equals(foodRequest.getOrganizationId())
+                || !food.getBranchId().equals(foodRequest.getBranchId())) {
+
+            throw new RuntimeException("You cannot edit another branch food.");
+
+        }
+
         food.setFoodName(foodRequest.getFoodName());
         food.setCategory(foodRequest.getCategory());
         food.setPrice(foodRequest.getPrice());
@@ -217,6 +250,9 @@ public class FoodServiceImpl implements FoodService {
     public void deleteFood(Long id) {
         Food food = foodRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Food Not Found"));
+
+
+
         foodRepository.delete(food);
     }
 

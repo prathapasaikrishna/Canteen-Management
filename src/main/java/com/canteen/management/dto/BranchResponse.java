@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class BranchResponse {
 
@@ -24,5 +23,22 @@ public class BranchResponse {
 
     private Long organizationId;
     private String organizationName;
+    private Double revenue;
 
+    public BranchResponse(Long id, String branchCode, String branchName, String address, String city, String state, String country, String pincode, String phone, String email, String logoUrl, String status, Long organizationId, String organizationName) {
+        this.id = id;
+        this.branchCode = branchCode;
+        this.branchName = branchName;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.pincode = pincode;
+        this.phone = phone;
+        this.email = email;
+        this.logoUrl = logoUrl;
+        this.status = status;
+        this.organizationId = organizationId;
+        this.organizationName = organizationName;
+    }
 }

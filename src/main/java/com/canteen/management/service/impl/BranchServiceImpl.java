@@ -25,6 +25,9 @@ public class BranchServiceImpl implements BranchService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    @Autowired
+    private com.canteen.management.repository.OrderRepository orderRepository;
+
     @Override
     public BranchResponse addBranch(BranchRequest request) {
 
@@ -88,22 +91,28 @@ public class BranchServiceImpl implements BranchService {
 
         return branchRepository.findAll()
                 .stream()
-                .map(branch -> new BranchResponse(
-                        branch.getId(),
-                        branch.getBranchCode(),
-                        branch.getBranchName(),
-                        branch.getAddress(),
-                        branch.getCity(),
-                        branch.getState(),
-                        branch.getCountry(),
-                        branch.getPincode(),
-                        branch.getPhone(),
-                        branch.getEmail(),
-                        branch.getLogoUrl(),
-                        branch.getStatus(),
-                        branch.getOrganization().getId(),
-                        branch.getOrganization().getName()
-                ))
+                .filter(branch -> !"INACTIVE".equalsIgnoreCase(branch.getStatus()))
+                .map(branch -> {
+                    BranchResponse response = new BranchResponse(
+                            branch.getId(),
+                            branch.getBranchCode(),
+                            branch.getBranchName(),
+                            branch.getAddress(),
+                            branch.getCity(),
+                            branch.getState(),
+                            branch.getCountry(),
+                            branch.getPincode(),
+                            branch.getPhone(),
+                            branch.getEmail(),
+                            branch.getLogoUrl(),
+                            branch.getStatus(),
+                            branch.getOrganization().getId(),
+                            branch.getOrganization().getName()
+                    );
+                    Double rev = orderRepository.getTotalRevenue(branch.getId());
+                    response.setRevenue(rev != null ? rev : 0.0);
+                    return response;
+                })
                 .toList();
 
     }
@@ -114,6 +123,7 @@ public class BranchServiceImpl implements BranchService {
         return branchRepository
                 .findByOrganizationId(organizationId)
                 .stream()
+                .filter(branch -> !"INACTIVE".equalsIgnoreCase(branch.getStatus()))
                 .map(branch -> new BranchResponse(
                         branch.getId(),
                         branch.getBranchCode(),
@@ -146,6 +156,20 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public String deleteBranch(Long id) {
-        return null;
+        Branch branch = branchRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Branch not found"));
+        branch.setStatus("INACTIVE");
+        branchRepository.save(branch);
+        
+        auditLogService.saveLog(
+                "SUPER_ADMIN",
+                "SUPER_ADMIN",
+                "DELETE_BRANCH",
+                "Branch Deleted : " + branch.getBranchName(),
+                branch.getOrganization().getId(),
+                branch.getId()
+        );
+        
+        return "Branch deleted successfully";
     }
 }

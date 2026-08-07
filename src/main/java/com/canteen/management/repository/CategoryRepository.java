@@ -10,4 +10,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByCategoryCode(String categoryCode);
 
     List<Category> findByBranch_Id(Long branchId);
+
+    java.util.Optional<Category> findByCategoryName(String categoryName);
 }

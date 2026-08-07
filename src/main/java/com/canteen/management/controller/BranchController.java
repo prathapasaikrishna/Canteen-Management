@@ -40,4 +40,8 @@ public class BranchController {
 
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String deleteBranch(@PathVariable Long id) {
+        return branchService.deleteBranch(id);
+    }
 }

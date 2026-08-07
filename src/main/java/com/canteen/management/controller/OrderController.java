@@ -36,8 +36,26 @@ public class OrderController {
         return orderService.updateOrderStatus(id, status);
     }
 
+    @GetMapping("/branch")
+    public List<OrderResponse> getOrdersByBranch(
+
+            @RequestParam Long organizationId,
+
+            @RequestParam Long branchId
+
+    ) {
+
+        return orderService.getOrdersByBranch(
+                organizationId,
+                branchId
+        );
+
+    }
+
     @DeleteMapping("/delete/{id}")
     public void deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
     }
+
+
 }

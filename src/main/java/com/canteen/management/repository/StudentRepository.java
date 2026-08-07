@@ -3,6 +3,7 @@ package com.canteen.management.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.canteen.management.entity.Student;
@@ -27,4 +28,6 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     Long countByBranchIdAndRole(Long branchId, String role);
 
     Long countByCreatedAtAfterAndRole(java.time.LocalDateTime dateTime, String role);
+
+    List<Student> findByBranchIdAndRole(Long branchId, String role);
 }

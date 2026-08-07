@@ -196,7 +196,8 @@ public class FoodServiceImpl implements FoodService {
             System.out.println("STEP 9");
 
             try {
-                notificationService.notifyAllStudents(
+                notificationService.notifyBranchStudents(
+                        savedFood.getBranchId(),
                         "🍔 New Food Available",
                         savedFood.getFoodName() + " is Available Today."
                 );

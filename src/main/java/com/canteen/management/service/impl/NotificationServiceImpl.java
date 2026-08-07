@@ -240,4 +240,57 @@ public class NotificationServiceImpl implements NotificationService {
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(Math.toIntExact(id));
     }
+
+    @Override
+    public void notifyBranchStudents(Long branchId, String title, String message) {
+        if (branchId == null) {
+            notifyAllStudents(title, message);
+            return;
+        }
+
+        List<Student> students = studentRepository.findByBranchIdAndRole(branchId, "STUDENT");
+        if (students == null || students.isEmpty()) {
+            return;
+        }
+
+        for (Student student : students) {
+            try {
+                Notification notification = new Notification();
+                notification.setStudentId(student.getStudentId());
+                notification.setTitle(title);
+                notification.setMessage(message);
+                notification.setTime(
+                        LocalDateTime.now().format(
+                                DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")
+                        )
+                );
+                notification.setRead(false);
+                notificationRepository.save(notification);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            if (student.getFcmToken() == null || student.getFcmToken().isBlank()) {
+                continue;
+            }
+
+            try {
+                Message firebaseMessage = Message.builder()
+                        .setToken(student.getFcmToken())
+                        .setNotification(
+                                com.google.firebase.messaging.Notification.builder()
+                                        .setTitle(title)
+                                        .setBody(message)
+                                        .build()
+                        )
+                        .build();
+
+                FirebaseMessaging.getInstance().send(firebaseMessage);
+                System.out.println("Notification Sent To : " + student.getStudentId());
+            } catch (Exception e) {
+                System.out.println("Failed : " + student.getStudentId());
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -90,8 +90,8 @@ public class OrderServiceImpl implements OrderService {
         
         order.setCanteenId(food.getCanteenId());
 
-        order.setOrganizationId(student.getOrganizationId());
-        order.setBranchId(student.getBranchId());
+        order.setOrganizationId(food.getOrganizationId());
+        order.setBranchId(food.getBranchId());
 
         Order savedOrder = orderRepository.save(order);
 
@@ -306,6 +306,25 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> getOrdersByBranch(Long organizationId, Long branchId) {
-        return List.of();
+        List<Order> orders = orderRepository.findByBranchId(branchId);
+        List<OrderResponse> responseList = new ArrayList<>();
+        for (Order order : orders) {
+            responseList.add(new OrderResponse(
+                    order.getId(),
+                    order.getOrderNumber(),
+                    order.getStudentId(),
+                    order.getFoodId(),
+                    order.getQuantity(),
+                    order.getTotalPrice(),
+                    order.getOrderDate(),
+                    order.getOrderStatus(),
+                    order.getQrCode(),
+                    order.getPaymentStatus(),
+                    order.getCanteenId(),
+                    "Success",
+                    order.getPaymentMethod() != null ? order.getPaymentMethod() : "UNKNOWN"
+            ));
+        }
+        return responseList;
     }
 }

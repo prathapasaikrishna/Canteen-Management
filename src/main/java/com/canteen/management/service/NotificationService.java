@@ -21,6 +21,12 @@ public interface NotificationService {
             String body
     );
 
+    void notifyBranchStudents(
+            Long branchId,
+            String title,
+            String body
+    );
+
     void sendBroadcastNotification(
             String title,
             String message

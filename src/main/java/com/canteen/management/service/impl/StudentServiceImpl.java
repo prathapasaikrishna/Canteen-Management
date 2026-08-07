@@ -52,8 +52,9 @@ public class StudentServiceImpl implements StudentService {
         student.setCanteenId(studentRequest.getCanteenId());
 
         student.setOrganizationId(studentRequest.getOrganizationId());
-
         student.setBranchId(studentRequest.getBranchId());
+        student.setAccountStatus("ACTIVE");
+        student.setUserType("CUSTOMER");
 
         
         Student savedStudent = studentRepository.save(student);
@@ -98,9 +99,10 @@ public class StudentServiceImpl implements StudentService {
                         student.getPassword()
                 )) {
 
-            if (!"ACTIVE".equalsIgnoreCase(student.getAccountStatus())) {
+            String status = student.getAccountStatus() != null ? student.getAccountStatus() : "ACTIVE";
+            if (!"ACTIVE".equalsIgnoreCase(status)) {
                 return new LoginResponse(
-                        "Account is " + student.getAccountStatus(),
+                        "Account is " + status,
                         ""
                 );
             }

@@ -1,5 +1,6 @@
 package com.canteen.management.controller;
 
+import com.canteen.management.dto.SuperAdminDashboardResponse;
 import com.canteen.management.dto.SuperAdminLoginRequest;
 import com.canteen.management.dto.SuperAdminLoginResponse;
 import com.canteen.management.service.SuperAdminService;
@@ -23,5 +24,13 @@ public class SuperAdminController {
         System.out.println(request.getPassword());
 
         return ResponseEntity.ok(superAdminService.login(request));
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<SuperAdminDashboardResponse> dashboard() {
+
+        return ResponseEntity.ok(
+                superAdminService.getDashboard()
+        );
     }
 }

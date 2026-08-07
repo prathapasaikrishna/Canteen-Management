@@ -1,6 +1,7 @@
 package com.canteen.management.service.impl;
 
 import com.canteen.management.dto.*;
+import com.canteen.management.entity.Student;
 import com.canteen.management.entity.Wallet;
 import com.canteen.management.entity.WalletTransaction;
 import com.canteen.management.repository.WalletRepository;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.razorpay.Utils;
+
+
+import com.canteen.management.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +27,9 @@ public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
 
     @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
     private com.canteen.management.service.NotificationService notificationService;
 
     @Value("${razorpay.key.secret}")
@@ -30,6 +37,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Autowired
     private WalletTransactionRepository transactionRepository;
+    private FoodRequest student;
 
     @Override
     public WalletResponse getWallet(String studentId) {
@@ -56,7 +64,15 @@ public class WalletServiceImpl implements WalletService {
 
                     Wallet w = new Wallet();
                     w.setStudentId(request.getStudentId());
+
                     w.setBalance(0.0);
+
+                    Student student = studentRepository
+                            .findByStudentId(request.getStudentId())
+                            .orElseThrow(() -> new RuntimeException("Student Not Found"));
+                    w.setOrganizationId(student.getOrganizationId());
+                    w.setBranchId(student.getBranchId());
+
                     return w;
                 });
 
@@ -71,7 +87,12 @@ public class WalletServiceImpl implements WalletService {
         transaction.setType("CREDIT");
         transaction.setDescription("Money Added");
 
+        transaction.setOrganizationId(student.getOrganizationId());
+        transaction.setBranchId(student.getBranchId());
+
         transactionRepository.save(transaction);
+
+
 
         // Send real-time wallet recharge push notification
         try {
@@ -98,6 +119,10 @@ public class WalletServiceImpl implements WalletService {
                 .findByStudentId(request.getStudentId())
                 .orElse(null);
 
+        Student student = studentRepository
+                .findByStudentId(request.getStudentId())
+                .orElseThrow(() -> new RuntimeException("Student Not Found"));
+
         if (wallet == null) {
             return new WalletResponse(
                     request.getStudentId(),
@@ -119,7 +144,12 @@ public class WalletServiceImpl implements WalletService {
 
         walletRepository.save(wallet);
 
+
+
         WalletTransaction transaction = new WalletTransaction();
+
+        transaction.setOrganizationId(student.getOrganizationId());
+        transaction.setBranchId(student.getBranchId());
 
         transaction.setStudentId(request.getStudentId());
         transaction.setAmount(request.getAmount());
@@ -165,6 +195,10 @@ public class WalletServiceImpl implements WalletService {
                 return new VerifyPaymentResponse(true, "Payment Already Processed");
             }
 
+            Student student = studentRepository
+                    .findByStudentId(request.getStudentId())
+                    .orElseThrow(() -> new RuntimeException("Student Not Found"));
+
             WalletTransaction transaction = new WalletTransaction();
             transaction.setStudentId(request.getStudentId());
             transaction.setAmount(request.getAmount());
@@ -176,6 +210,9 @@ public class WalletServiceImpl implements WalletService {
             transaction.setPaymentStatus("SUCCESS");
             transactionRepository.save(transaction);
 
+            transaction.setOrganizationId(student.getOrganizationId());
+            transaction.setBranchId(student.getBranchId());
+
             Wallet wallet = walletRepository.findByStudentId(request.getStudentId())
                     .orElseGet(() -> {
                         Wallet w = new Wallet();
@@ -185,6 +222,9 @@ public class WalletServiceImpl implements WalletService {
                     });
             wallet.setBalance(wallet.getBalance() + request.getAmount());
             walletRepository.save(wallet);
+
+            wallet.setOrganizationId(student.getOrganizationId());
+            wallet.setBranchId(student.getBranchId());
 
             // Send push notification for recharge success
             try {

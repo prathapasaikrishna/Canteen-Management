@@ -18,4 +18,12 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     Long countByBranchId(Long branchId);
 
+    Long countByRole(String role);
+
+    Long countByOrganizationId(Long organizationId);
+
+    Long countByOrganizationIdAndRole(Long organizationId, String role);
+
+    Long countByBranchIdAndRole(Long branchId, String role);
+
 }

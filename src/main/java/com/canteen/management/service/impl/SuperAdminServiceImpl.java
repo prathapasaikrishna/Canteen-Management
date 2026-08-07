@@ -7,12 +7,33 @@ import com.canteen.management.repository.SuperAdminRepository;
 import com.canteen.management.service.SuperAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.canteen.management.dto.SuperAdminDashboardResponse;
+import com.canteen.management.repository.OrganizationRepository;
+import com.canteen.management.repository.BranchRepository;
+import com.canteen.management.repository.StudentRepository;
+import com.canteen.management.repository.FoodRepository;
+import com.canteen.management.repository.OrderRepository;
 
 @Service
 public class SuperAdminServiceImpl implements SuperAdminService {
 
     @Autowired
     private SuperAdminRepository repository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private FoodRepository foodRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Override
     public SuperAdminLoginResponse login(SuperAdminLoginRequest request) {
@@ -43,6 +64,43 @@ public class SuperAdminServiceImpl implements SuperAdminService {
         response.setRole(admin.getRole());
         response.setStatus(admin.getStatus());
         response.setMessage("Login Successful");
+
+        return response;
+    }
+
+    @Override
+    public SuperAdminDashboardResponse getDashboard() {
+
+        SuperAdminDashboardResponse response =
+                new SuperAdminDashboardResponse();
+
+        response.setTotalOrganizations(
+                organizationRepository.count()
+        );
+
+        response.setTotalBranches(
+                branchRepository.count()
+        );
+
+        response.setTotalStudents(
+                studentRepository.countByRole("STUDENT")
+        );
+
+        response.setTotalFoods(
+                foodRepository.count()
+        );
+
+        response.setTotalOrders(
+                orderRepository.count()
+        );
+
+        Double revenue = orderRepository.getTotalRevenue();
+
+        if (revenue == null) {
+            revenue = 0.0;
+        }
+
+        response.setTotalRevenue(revenue);
 
         return response;
     }

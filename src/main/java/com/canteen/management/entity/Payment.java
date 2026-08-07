@@ -31,6 +31,28 @@ public class Payment {
     @Column(nullable = false)
     private String paymentDate;
 
+    @Column(name = "organization_id")
+    private Long organizationId;
+
+    public Long getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    @Column(name = "branch_id")
+    private Long branchId;
+
     public Payment() {
     }
 

@@ -56,7 +56,8 @@ public class SecurityConfig {
                                 "/uploads/**",
                                 "/super-admin/**",
                                 "/branch-admin/**",
-                                "/category/**"
+                                "/category/**",
+                                "/user/**"
 
 
 

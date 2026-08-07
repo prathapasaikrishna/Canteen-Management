@@ -39,6 +39,9 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaymentMethod(paymentRequest.getPaymentMethod());
         payment.setPaymentStatus("SUCCESS");
         payment.setPaymentDate(LocalDate.now().toString());
+        payment.setBranchId(order.getBranchId());
+        payment.setOrganizationId(order.getOrganizationId());
+
 
         Payment savedPayment = paymentRepository.save(payment);
 
@@ -54,7 +57,9 @@ public class PaymentServiceImpl implements PaymentService {
                 savedPayment.getPaymentMethod(),
                 savedPayment.getPaymentStatus(),
                 savedPayment.getPaymentDate(),
-                "Payment Successful"
+                "Payment Successful",
+                savedPayment.getBranchId(),
+                savedPayment.getOrganizationId()
         );
     }
 
@@ -76,7 +81,9 @@ public class PaymentServiceImpl implements PaymentService {
                             payment.getPaymentMethod(),
                             payment.getPaymentStatus(),
                             payment.getPaymentDate(),
-                            "Success"
+                            "Success",
+                            payment.getBranchId(),
+                            payment.getOrganizationId()
                     )
             );
         }
@@ -99,7 +106,9 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.getPaymentMethod(),
                 payment.getPaymentStatus(),
                 payment.getPaymentDate(),
-                "Success"
+                "Success",
+                payment.getBranchId(),
+                payment.getOrganizationId()
         );
     }
 }

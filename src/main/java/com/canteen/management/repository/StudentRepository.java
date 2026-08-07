@@ -26,4 +26,5 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     Long countByBranchIdAndRole(Long branchId, String role);
 
+    Long countByCreatedAtAfterAndRole(java.time.LocalDateTime dateTime, String role);
 }

@@ -56,4 +56,32 @@ public class SuperAdminDashboardResponse {
     public void setTotalRevenue(Double totalRevenue) {
         this.totalRevenue = totalRevenue;
     }
+
+    private Long dailyRegistrations;
+    private Long monthlyRegistrations;
+    private Long yearlyRegistrations;
+
+    public Long getDailyRegistrations() {
+        return dailyRegistrations;
+    }
+
+    public void setDailyRegistrations(Long dailyRegistrations) {
+        this.dailyRegistrations = dailyRegistrations;
+    }
+
+    public Long getMonthlyRegistrations() {
+        return monthlyRegistrations;
+    }
+
+    public void setMonthlyRegistrations(Long monthlyRegistrations) {
+        this.monthlyRegistrations = monthlyRegistrations;
+    }
+
+    public Long getYearlyRegistrations() {
+        return yearlyRegistrations;
+    }
+
+    public void setYearlyRegistrations(Long yearlyRegistrations) {
+        this.yearlyRegistrations = yearlyRegistrations;
+    }
 }

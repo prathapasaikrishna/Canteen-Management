@@ -102,6 +102,14 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
         response.setTotalRevenue(revenue);
 
+        java.time.LocalDateTime dailyStart = java.time.LocalDateTime.now().with(java.time.LocalTime.MIN);
+        java.time.LocalDateTime monthlyStart = java.time.LocalDateTime.now().withDayOfMonth(1).with(java.time.LocalTime.MIN);
+        java.time.LocalDateTime yearlyStart = java.time.LocalDateTime.now().withDayOfYear(1).with(java.time.LocalTime.MIN);
+
+        response.setDailyRegistrations(studentRepository.countByCreatedAtAfterAndRole(dailyStart, "STUDENT"));
+        response.setMonthlyRegistrations(studentRepository.countByCreatedAtAfterAndRole(monthlyStart, "STUDENT"));
+        response.setYearlyRegistrations(studentRepository.countByCreatedAtAfterAndRole(yearlyStart, "STUDENT"));
+
         return response;
     }
 }

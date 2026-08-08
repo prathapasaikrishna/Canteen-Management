@@ -13,5 +13,5 @@ public interface AdminService {
 
     AdminDashboardResponse getBranchDashboard(Long branchId);
 
-
+    DashboardResponse getDashboardByBranch(Long branchId);
 }

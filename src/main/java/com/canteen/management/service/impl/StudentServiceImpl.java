@@ -37,7 +37,11 @@ public class StudentServiceImpl implements StudentService {
             throw new EmailAlreadyExistsException("Email already exists");
         }
         Student student = new Student();
-        student.setStudentId(studentRequest.getStudentId());
+        if (studentRequest.getStudentId() == null || studentRequest.getStudentId().trim().isEmpty()) {
+            student.setStudentId("CUST_" + System.currentTimeMillis());
+        } else {
+            student.setStudentId(studentRequest.getStudentId());
+        }
         student.setName(studentRequest.getName());
         student.setEmail(studentRequest.getEmail());
 
@@ -45,9 +49,20 @@ public class StudentServiceImpl implements StudentService {
         student.setPassword(
                 passwordEncoder.encode(studentRequest.getPassword())
         );
-        student.setDepartment(studentRequest.getDepartment());
+        
+        if (studentRequest.getDepartment() == null || studentRequest.getDepartment().trim().isEmpty()) {
+            student.setDepartment("N/A");
+        } else {
+            student.setDepartment(studentRequest.getDepartment());
+        }
+        
         student.setMobileNumber(studentRequest.getMobileNumber());
-        student.setYear(studentRequest.getYear());
+        
+        if (studentRequest.getYear() == null || studentRequest.getYear().trim().isEmpty()) {
+            student.setYear("N/A");
+        } else {
+            student.setYear(studentRequest.getYear());
+        }
         student.setRole(studentRequest.getRole());
         student.setCanteenId(studentRequest.getCanteenId());
 

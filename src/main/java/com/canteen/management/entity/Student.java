@@ -22,8 +22,7 @@
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
 
-        @NotBlank(message = "Student ID is required")
-        @Column(name = "student_id", nullable = false)
+        @Column(name = "student_id")
         private String studentId;
 
         @NotBlank(message = "Name is required")
@@ -40,16 +39,14 @@
         @Column(name = "password", nullable = false)
         private String password;
 
-        @NotBlank(message = "Department is required")
-        @Column(name = "department", nullable = false)
+        @Column(name = "department")
         private String department;
 
         @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must contain exactly 10 digits")
         @Column(name = "mobile_number", nullable = false)
         private String mobileNumber;
 
-        @NotBlank(message = "Year is required")
-        @Column(name = "year", nullable = false)
+        @Column(name = "year")
         private String year;
 
         @NotBlank(message = "Role is required")

@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/",
                                 "/student/login",
                                 "/student/register",
+                                "/student/register-otp",
                                 "/student/forgot-password",
                                 "/student/reset-password",
                                 "/student/verify-otp",

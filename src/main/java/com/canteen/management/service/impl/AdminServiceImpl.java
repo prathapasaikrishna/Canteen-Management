@@ -264,4 +264,63 @@ public class AdminServiceImpl implements AdminService {
 
         return response;
     }
+
+    @Override
+    public DashboardResponse getDashboardByBranch(Long branchId) {
+        DashboardResponse response = new DashboardResponse();
+        if (branchId == null) {
+            return response;
+        }
+
+        Long totalStudents = studentRepository.countByBranchIdAndRole(branchId, "STUDENT");
+        if (totalStudents == null || totalStudents == 0) {
+            totalStudents = studentRepository.countByBranchId(branchId);
+        }
+        Long totalFoods = foodRepository.countByBranchId(branchId);
+        Long totalOrders = orderRepository.countByBranchId(branchId);
+        
+        List<com.canteen.management.entity.Order> branchOrders = orderRepository.findByBranchId(branchId);
+        Long totalPayments = (long) branchOrders.size();
+        Double totalRevenue = orderRepository.getTotalRevenue(branchId);
+        if (totalRevenue == null) {
+            totalRevenue = 0.0;
+        }
+
+        response.setTotalStudents(totalStudents);
+        response.setTotalFoods(totalFoods);
+        response.setTotalOrders(totalOrders);
+        response.setTotalPayments(totalPayments);
+        response.setTotalRevenue(totalRevenue);
+
+        // ---------- Most Ordered Food ----------
+        Map<Long, Long> foodOrderCount = new java.util.HashMap<>();
+        for (com.canteen.management.entity.Order o : branchOrders) {
+            if (o.getFoodId() != null) {
+                int qty = o.getQuantity() != null ? o.getQuantity() : 1;
+                foodOrderCount.put(o.getFoodId(), foodOrderCount.getOrDefault(o.getFoodId(), 0L) + qty);
+            }
+        }
+        Long mostOrderedFoodId = null;
+        Long maxCount = 0L;
+        for (Map.Entry<Long, Long> entry : foodOrderCount.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostOrderedFoodId = entry.getKey();
+            }
+        }
+        String mostOrderedFoodName = "N/A";
+        if (mostOrderedFoodId != null) {
+            Optional<Food> f = foodRepository.findById(mostOrderedFoodId);
+            if (f.isPresent()) {
+                mostOrderedFoodName = f.get().getFoodName();
+            }
+        }
+        response.setMostOrderedFood(mostOrderedFoodName);
+        response.setMostOrderedCount(maxCount);
+
+        response.setTopRatedFood("N/A");
+        response.setTopRating(0.0);
+
+        return response;
+    }
 }

@@ -36,4 +36,9 @@ public class AdminController {
 
         return adminService.getBranchDashboard(branchId);
     }
+
+    @GetMapping("/dashboard/branch/{branchId}")
+    public DashboardResponse getDashboardByBranch(@PathVariable("branchId") Long branchId) {
+        return adminService.getDashboardByBranch(branchId);
+    }
 }

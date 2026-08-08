@@ -152,6 +152,50 @@ public class FoodController {
         return ResponseEntity.ok(res);
     }
 
+    @Autowired(required = false)
+    private javax.sql.DataSource dataSource;
+
+    @GetMapping("/debug-db")
+    public ResponseEntity<String> debugDb() {
+        StringBuilder sb = new StringBuilder();
+        if (dataSource == null) {
+            return ResponseEntity.ok("DataSource bean is NULL!");
+        }
+        try (java.sql.Connection conn = dataSource.getConnection()) {
+            sb.append("Database Connection: SUCCESS\n");
+            sb.append("Database Product Name: ").append(conn.getMetaData().getDatabaseProductName()).append("\n");
+            sb.append("Database Product Version: ").append(conn.getMetaData().getDatabaseProductVersion()).append("\n");
+            sb.append("Database URL: ").append(conn.getMetaData().getURL()).append("\n");
+
+            // Try query
+            try (java.sql.Statement stmt = conn.createStatement()) {
+                sb.append("Executing SELECT 1 query...\n");
+                stmt.executeQuery("SELECT 1");
+                sb.append("SELECT 1: SUCCESS\n");
+            } catch (Exception queryEx) {
+                sb.append("SELECT 1 Query FAILED: ").append(queryEx.getMessage()).append("\n");
+            }
+
+            // Check if organization table exists
+            try (java.sql.ResultSet tables = conn.getMetaData().getTables(null, null, "organization", null)) {
+                if (tables.next()) {
+                    sb.append("Table 'organization': EXISTS\n");
+                } else {
+                    sb.append("Table 'organization': NOT FOUND!\n");
+                }
+            } catch (Exception tablesEx) {
+                sb.append("Get tables FAILED: ").append(tablesEx.getMessage()).append("\n");
+            }
+
+        } catch (Exception e) {
+            sb.append("Database Connection FAILED: ").append(e.getMessage()).append("\n");
+            java.io.StringWriter sw = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(sw));
+            sb.append("\nStacktrace:\n").append(sw.toString());
+        }
+        return ResponseEntity.ok(sb.toString());
+    }
+
     @GetMapping("/debug-env")
     public ResponseEntity<String> debugEnv() {
         StringBuilder sb = new StringBuilder();

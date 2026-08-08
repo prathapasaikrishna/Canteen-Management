@@ -176,12 +176,16 @@ public class FoodController {
                 sb.append("SELECT 1 Query FAILED: ").append(queryEx.getMessage()).append("\n");
             }
 
-            // Check if organization table exists
-            try (java.sql.ResultSet tables = conn.getMetaData().getTables(null, null, "organization", null)) {
-                if (tables.next()) {
-                    sb.append("Table 'organization': EXISTS\n");
-                } else {
-                    sb.append("Table 'organization': NOT FOUND!\n");
+            // List all tables
+            sb.append("Listing all tables in database:\n");
+            try (java.sql.ResultSet rs = conn.getMetaData().getTables(null, null, "%", new String[]{"TABLE"})) {
+                boolean found = false;
+                while (rs.next()) {
+                    sb.append(" - ").append(rs.getString("TABLE_NAME")).append("\n");
+                    found = true;
+                }
+                if (!found) {
+                    sb.append(" No tables found in database!\n");
                 }
             } catch (Exception tablesEx) {
                 sb.append("Get tables FAILED: ").append(tablesEx.getMessage()).append("\n");

@@ -16,8 +16,8 @@ public class OtpServiceImpl implements OtpService {
     @Override
     public String generateOtp(String email) {
 
-        String otp = String.format("%04d",
-                new Random().nextInt(10000));
+        String otp = String.format("%06d",
+                new Random().nextInt(999999));
 
         otpMap.put(email, otp);
         System.out.println("GENERATED OTP : " + otp);

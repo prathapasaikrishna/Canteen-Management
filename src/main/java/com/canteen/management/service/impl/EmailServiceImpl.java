@@ -19,6 +19,9 @@ public class EmailServiceImpl implements EmailService {
     @Value("${brevo.api.key}")
     private String apiKey;
 
+    @Value("${brevo.sender.email:prathapadany@gmail.com}")
+    private String senderEmail;
+
     @Override
     public void sendEmail(String to, String subject, String body) {
         String url = "https://api.brevo.com/v3/smtp/email";
@@ -31,7 +34,7 @@ public class EmailServiceImpl implements EmailService {
 
         Map<String, String> sender = new HashMap<>();
         sender.put("name", "Smart Foods");
-        sender.put("email", "prathapadany@gmail.com");
+        sender.put("email", senderEmail);
 
         request.put("sender", sender);
         request.put("to", new Object[]{
@@ -51,6 +54,8 @@ public class EmailServiceImpl implements EmailService {
                     entity,
                     String.class
             );
+        } catch (org.springframework.web.client.RestClientResponseException ex) {
+            System.err.println("Email API call failed with status " + ex.getRawStatusCode() + ": " + ex.getResponseBodyAsString());
         } catch (Exception ex) {
             System.err.println("Email API call failed: " + ex.getMessage());
         }

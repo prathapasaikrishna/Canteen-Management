@@ -334,4 +334,13 @@ public class FoodServiceImpl implements FoodService {
 
         return responseList;
     }
+
+    @Override
+    public FoodResponse updateFoodStatus(Long id, String status) {
+        Food food = foodRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Food Not Found"));
+        food.setStatus(status);
+        Food saved = foodRepository.save(food);
+        return mapToResponse(saved, "Status Updated Successfully");
+    }
 }

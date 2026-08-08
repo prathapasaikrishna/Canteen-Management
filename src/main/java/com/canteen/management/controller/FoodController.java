@@ -144,6 +144,14 @@ public class FoodController {
         }
     }
 
+    @PutMapping("/status/{id}")
+    public ResponseEntity<FoodResponse> updateFoodStatus(
+            @PathVariable("id") Long id,
+            @RequestParam("status") String status) {
+        FoodResponse res = foodService.updateFoodStatus(id, status);
+        return ResponseEntity.ok(res);
+    }
+
     @GetMapping("/debug-env")
     public ResponseEntity<String> debugEnv() {
         StringBuilder sb = new StringBuilder();

@@ -32,4 +32,6 @@ public interface FoodService {
             Long organizationId,
             Long branchId
     );
+
+    FoodResponse updateFoodStatus(Long id, String status);
 }

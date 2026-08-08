@@ -2,7 +2,9 @@ package com.canteen.management.service.impl;
 
 import com.canteen.management.dto.RecommendationResponse;
 import com.canteen.management.entity.Food;
+import com.canteen.management.entity.Student;
 import com.canteen.management.repository.FoodRepository;
+import com.canteen.management.repository.StudentRepository;
 import com.canteen.management.service.RecommendationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,19 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Autowired
     private FoodRepository foodRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Override
     public List<RecommendationResponse> getRecommendations(String studentId) {
 
-        List<Food> foods = foodRepository.findAll();
+        Student student = studentRepository.findByStudentId(studentId).orElse(null);
+        List<Food> foods = new ArrayList<>();
+        if (student != null && student.getBranchId() != null) {
+            foods = foodRepository.findByBranchId(student.getBranchId());
+        } else {
+            foods = foodRepository.findAll();
+        }
 
         List<RecommendationResponse> recommendations = new ArrayList<>();
 

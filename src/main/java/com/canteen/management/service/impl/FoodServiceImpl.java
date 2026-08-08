@@ -232,19 +232,47 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public FoodResponse updateFood(Long id, Food foodRequest, MultipartFile image) {
+    public FoodResponse updateFood(Long id, com.canteen.management.dto.FoodRequest foodRequest, MultipartFile image) {
         Food food = foodRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Food Not Found"));
 
-        if (!food.getOrganizationId().equals(foodRequest.getOrganizationId())
-                || !food.getBranchId().equals(foodRequest.getBranchId())) {
-
-            throw new RuntimeException("You cannot edit another branch food.");
-
+        if (foodRequest.getOrganizationId() != null && foodRequest.getBranchId() != null) {
+            if (!food.getOrganizationId().equals(foodRequest.getOrganizationId())
+                    || !food.getBranchId().equals(foodRequest.getBranchId())) {
+                throw new RuntimeException("You cannot edit another branch food.");
+            }
         }
 
         food.setFoodName(foodRequest.getFoodName());
-        food.setCategory(foodRequest.getCategory());
+        
+        Category category = null;
+        if (foodRequest.getCategoryId() != null) {
+            category = categoryRepository.findById(foodRequest.getCategoryId()).orElse(null);
+        }
+        if (category == null && foodRequest.getCategory() != null && !foodRequest.getCategory().trim().isEmpty()) {
+            String catName = foodRequest.getCategory().trim();
+            java.util.List<com.canteen.management.entity.Category> globalOrgs = categoryRepository.findByCategoryNameIgnoreCase(catName);
+            if (!globalOrgs.isEmpty()) {
+                category = globalOrgs.get(0);
+            } else {
+                category = new Category();
+                category.setCategoryName(catName);
+                category.setCategoryCode(catName.toUpperCase().replaceAll("\\s+", "_") + "_" + System.currentTimeMillis());
+                if (foodRequest.getBranchId() != null) {
+                    Branch branch = branchRepository.findById(foodRequest.getBranchId()).orElse(null);
+                    category.setBranch(branch);
+                }
+                if (foodRequest.getOrganizationId() != null) {
+                    Organization org = organizationRepository.findById(foodRequest.getOrganizationId()).orElse(null);
+                    category.setOrganization(org);
+                }
+                category = categoryRepository.save(category);
+            }
+        }
+        if (category != null) {
+            food.setCategory(category);
+        }
+
         food.setPrice(foodRequest.getPrice());
         food.setAvailableDate(foodRequest.getAvailableDate());
         food.setAvailableTime(foodRequest.getAvailableTime());

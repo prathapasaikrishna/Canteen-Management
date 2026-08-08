@@ -22,6 +22,7 @@ import com.canteen.management.entity.Wallet;
 import com.canteen.management.entity.WalletTransaction;
 import com.canteen.management.repository.FoodRepository;
 import com.canteen.management.repository.OrderRepository;
+import com.canteen.management.repository.BranchRepository;
 import com.canteen.management.service.OrderService;
 
 @Service
@@ -29,6 +30,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private BranchRepository branchRepository;
 
     @Autowired
     private FoodRepository foodRepository;
@@ -306,9 +310,23 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> getOrdersByBranch(Long organizationId, Long branchId) {
+        java.time.LocalDate branchCreatedDate = null;
+        java.util.Optional<com.canteen.management.entity.Branch> branchOpt = branchRepository.findById(branchId);
+        if (branchOpt.isPresent() && branchOpt.get().getCreatedAt() != null) {
+            branchCreatedDate = branchOpt.get().getCreatedAt().toLocalDate();
+        }
+
         List<Order> orders = orderRepository.findByBranchId(branchId);
         List<OrderResponse> responseList = new ArrayList<>();
         for (Order order : orders) {
+            if (branchCreatedDate != null && order.getOrderDate() != null) {
+                try {
+                    java.time.LocalDate oDate = java.time.LocalDate.parse(order.getOrderDate().trim());
+                    if (oDate.isBefore(branchCreatedDate)) {
+                        continue;
+                    }
+                } catch (Exception ignored) {}
+            }
             responseList.add(new OrderResponse(
                     order.getId(),
                     order.getOrderNumber(),

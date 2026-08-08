@@ -69,7 +69,7 @@ public class FoodController {
                 new com.fasterxml.jackson.databind.ObjectMapper()
                 .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        Food food = mapper.readValue(foodJson, Food.class);
+        com.canteen.management.dto.FoodRequest food = mapper.readValue(foodJson, com.canteen.management.dto.FoodRequest.class);
 
         FoodResponse updatedFood = foodService.updateFood(id, food, image);
 

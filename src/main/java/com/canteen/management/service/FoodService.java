@@ -16,7 +16,7 @@ public interface FoodService {
 
     FoodResponse getFoodById(Long id);
 
-    FoodResponse updateFood(Long id, Food foodRequest, MultipartFile image);
+    FoodResponse updateFood(Long id, FoodRequest foodRequest, MultipartFile image);
 
     void deleteFood(Long id);
 

@@ -32,6 +32,9 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private BranchRepository branchRepository;
+
     @Override
     public DashboardResponse getDashboard(String canteenId) {
         DashboardResponse response = new DashboardResponse();
@@ -272,29 +275,43 @@ public class AdminServiceImpl implements AdminService {
             return response;
         }
 
+        java.time.LocalDate branchCreatedDate = null;
+        java.util.Optional<com.canteen.management.entity.Branch> branchOpt = branchRepository.findById(branchId);
+        if (branchOpt.isPresent() && branchOpt.get().getCreatedAt() != null) {
+            branchCreatedDate = branchOpt.get().getCreatedAt().toLocalDate();
+        }
+
         Long totalStudents = studentRepository.countByBranchIdAndRole(branchId, "STUDENT");
         if (totalStudents == null || totalStudents == 0) {
             totalStudents = studentRepository.countByBranchId(branchId);
         }
         Long totalFoods = foodRepository.countByBranchId(branchId);
-        Long totalOrders = orderRepository.countByBranchId(branchId);
-        
-        List<com.canteen.management.entity.Order> branchOrders = orderRepository.findByBranchId(branchId);
-        Long totalPayments = (long) branchOrders.size();
-        Double totalRevenue = orderRepository.getTotalRevenue(branchId);
-        if (totalRevenue == null) {
-            totalRevenue = 0.0;
+
+        List<com.canteen.management.entity.Order> allOrders = orderRepository.findByBranchId(branchId);
+        List<com.canteen.management.entity.Order> filteredOrders = new ArrayList<>();
+        double totalRevenue = 0.0;
+        for (com.canteen.management.entity.Order o : allOrders) {
+            if (branchCreatedDate != null && o.getOrderDate() != null) {
+                try {
+                    java.time.LocalDate oDate = java.time.LocalDate.parse(o.getOrderDate().trim());
+                    if (oDate.isBefore(branchCreatedDate)) {
+                        continue;
+                    }
+                } catch (Exception ignored) {}
+            }
+            filteredOrders.add(o);
+            totalRevenue += (o.getTotalPrice() != null ? o.getTotalPrice() : 0.0);
         }
 
         response.setTotalStudents(totalStudents);
         response.setTotalFoods(totalFoods);
-        response.setTotalOrders(totalOrders);
-        response.setTotalPayments(totalPayments);
+        response.setTotalOrders((long) filteredOrders.size());
+        response.setTotalPayments((long) filteredOrders.size());
         response.setTotalRevenue(totalRevenue);
 
         // ---------- Most Ordered Food ----------
         Map<Long, Long> foodOrderCount = new java.util.HashMap<>();
-        for (com.canteen.management.entity.Order o : branchOrders) {
+        for (com.canteen.management.entity.Order o : filteredOrders) {
             if (o.getFoodId() != null) {
                 int qty = o.getQuantity() != null ? o.getQuantity() : 1;
                 foodOrderCount.put(o.getFoodId(), foodOrderCount.getOrDefault(o.getFoodId(), 0L) + qty);

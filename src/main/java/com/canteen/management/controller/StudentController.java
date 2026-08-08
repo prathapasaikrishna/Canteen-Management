@@ -37,6 +37,9 @@ public class StudentController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    @Autowired
+    private com.canteen.management.repository.WalletRepository walletRepository;
+
     @PostMapping("/register-otp")
     public ApiResponse sendRegisterOtp(@RequestParam("email") String email) {
         if (studentRepository.existsByEmail(email)) {
@@ -153,6 +156,12 @@ public class StudentController {
         Student student = studentRepository.findById(id).orElse(null);
         if (student == null) {
             return ResponseEntity.notFound().build();
+        }
+        if (student.getStudentId() != null) {
+            com.canteen.management.entity.Wallet wallet = walletRepository.findByStudentId(student.getStudentId()).orElse(null);
+            if (wallet != null) {
+                walletRepository.delete(wallet);
+            }
         }
         studentRepository.delete(student);
         return ResponseEntity.ok(new ApiResponse("Customer deleted successfully"));

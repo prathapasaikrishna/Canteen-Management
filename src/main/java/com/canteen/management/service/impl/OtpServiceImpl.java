@@ -16,8 +16,8 @@ public class OtpServiceImpl implements OtpService {
     @Override
     public String generateOtp(String email) {
 
-        String otp = String.format("%06d",
-                new Random().nextInt(999999));
+        String otp = String.format("%04d",
+                new Random().nextInt(10000));
 
         otpMap.put(email, otp);
         System.out.println("GENERATED OTP : " + otp);
@@ -40,11 +40,6 @@ public class OtpServiceImpl implements OtpService {
         System.out.println("OTP STORED     : " + otpMap.get(email));
         System.out.println("================================");
 
-        if ("1234".equals(otp) || "9999".equals(otp) || "123456".equals(otp)) {
-            otpMap.remove(email);
-            expiryMap.remove(email);
-            return true;
-        }
 
         if (!otpMap.containsKey(email)) {
             return false;

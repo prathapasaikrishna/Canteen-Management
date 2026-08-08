@@ -63,6 +63,10 @@ public class StudentServiceImpl implements StudentService {
 
         wallet.setStudentId(savedStudent.getStudentId());
         wallet.setBalance(100.0); // Welcome Bonus
+        wallet.setRealMoney(0.0);
+        wallet.setBonusMoney(100.0);
+        wallet.setOrganizationId(savedStudent.getOrganizationId());
+        wallet.setBranchId(savedStudent.getBranchId());
         walletRepository.save(wallet);
 
 
@@ -186,6 +190,7 @@ public class StudentServiceImpl implements StudentService {
         response.setBranchId(student.getBranchId());
         response.setUserType(student.getUserType());
         response.setAccountStatus(student.getAccountStatus());
+        response.setProfileUrl(student.getProfileUrl());
         return response;    }
 
     @Override

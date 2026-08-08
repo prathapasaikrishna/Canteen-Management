@@ -22,6 +22,9 @@ public class Banner {
 
     private String description;
 
+    @Column(name = "branch_id")
+    private Long branchId;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

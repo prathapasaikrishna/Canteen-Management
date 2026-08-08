@@ -20,7 +20,10 @@ public class BannerController {
     private final CloudinaryService cloudinaryService;
 
     @GetMapping("/all")
-    public List<Banner> getAllBanners() {
+    public List<Banner> getAllBanners(@RequestParam(value = "branchId", required = false) Long branchId) {
+        if (branchId != null) {
+            return bannerRepository.findByBranchIdOrGlobal(branchId);
+        }
         return bannerRepository.findAll();
     }
 
@@ -28,7 +31,8 @@ public class BannerController {
     public ResponseEntity<Banner> addBanner(
             @RequestParam("image") MultipartFile image,
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "description", required = false) String description) {
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "branchId", required = false) Long branchId) {
 
         String imageUrl = cloudinaryService.uploadImage(image);
         if (imageUrl == null || imageUrl.isEmpty()) {
@@ -39,6 +43,7 @@ public class BannerController {
         banner.setImageUrl(imageUrl);
         banner.setTitle(title);
         banner.setDescription(description);
+        banner.setBranchId(branchId);
 
         Banner saved = bannerRepository.save(banner);
         return ResponseEntity.ok(saved);

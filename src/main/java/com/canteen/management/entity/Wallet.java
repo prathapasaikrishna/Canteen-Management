@@ -22,6 +22,12 @@ public class Wallet {
     @Column(nullable = false)
     private Double balance = 0.0;
 
+    @Column(name = "real_money")
+    private Double realMoney = 0.0;
+
+    @Column(name = "bonus_money")
+    private Double bonusMoney = 0.0;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -99,4 +105,19 @@ public class Wallet {
         this.organizationId = organizationId;
     }
 
+    public Double getRealMoney() {
+        return realMoney;
+    }
+
+    public void setRealMoney(Double realMoney) {
+        this.realMoney = realMoney;
+    }
+
+    public Double getBonusMoney() {
+        return bonusMoney;
+    }
+
+    public void setBonusMoney(Double bonusMoney) {
+        this.bonusMoney = bonusMoney;
+    }
 }

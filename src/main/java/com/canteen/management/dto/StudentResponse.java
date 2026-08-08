@@ -135,4 +135,14 @@ public class StudentResponse {
     public void setBranchId(Long branchId) {
         this.branchId = branchId;
     }
+
+    private String profileUrl;
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
 }

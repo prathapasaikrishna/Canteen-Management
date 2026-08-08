@@ -89,4 +89,7 @@
 
         @Column(name = "loyalty_tier")
         private String loyaltyTier = "SILVER";
+
+        @Column(name = "profile_url", length = 500)
+        private String profileUrl;
     }

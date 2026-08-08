@@ -79,6 +79,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return organizationRepository.findAll()
                 .stream()
+                .filter(org -> !"INACTIVE".equalsIgnoreCase(org.getStatus()))
                 .map(org -> new OrganizationResponse(
                         org.getId(),
                         org.getOrganizationCode(),

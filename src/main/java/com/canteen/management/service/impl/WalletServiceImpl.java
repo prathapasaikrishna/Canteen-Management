@@ -76,7 +76,10 @@ public class WalletServiceImpl implements WalletService {
                     return w;
                 });
 
-        wallet.setBalance(wallet.getBalance() + request.getAmount());
+        double currentReal = wallet.getRealMoney() != null ? wallet.getRealMoney() : 0.0;
+        double currentBonus = wallet.getBonusMoney() != null ? wallet.getBonusMoney() : 0.0;
+        wallet.setRealMoney(currentReal + request.getAmount());
+        wallet.setBalance(wallet.getRealMoney() + currentBonus);
 
         walletRepository.save(wallet);
 
@@ -131,6 +134,14 @@ public class WalletServiceImpl implements WalletService {
             );
         }
 
+        if (wallet.getRealMoney() == null || wallet.getRealMoney() <= 0.0) {
+            return new WalletResponse(
+                    request.getStudentId(),
+                    wallet.getBalance(),
+                    "Bonus locked. Please add money to unlock your welcome bonus!"
+            );
+        }
+
         if (wallet.getBalance() < request.getAmount()) {
 
             return new WalletResponse(
@@ -140,7 +151,18 @@ public class WalletServiceImpl implements WalletService {
             );
         }
 
-        wallet.setBalance(wallet.getBalance() - request.getAmount());
+        double paidAmount = request.getAmount();
+        double currentReal = wallet.getRealMoney() != null ? wallet.getRealMoney() : 0.0;
+        double currentBonus = wallet.getBonusMoney() != null ? wallet.getBonusMoney() : 0.0;
+
+        if (currentReal >= paidAmount) {
+            wallet.setRealMoney(currentReal - paidAmount);
+        } else {
+            double remaining = paidAmount - currentReal;
+            wallet.setRealMoney(0.0);
+            wallet.setBonusMoney(currentBonus - remaining);
+        }
+        wallet.setBalance(wallet.getRealMoney() + wallet.getBonusMoney());
 
         walletRepository.save(wallet);
 
@@ -220,7 +242,10 @@ public class WalletServiceImpl implements WalletService {
                         w.setBalance(0.0);
                         return w;
                     });
-            wallet.setBalance(wallet.getBalance() + request.getAmount());
+            double currentReal = wallet.getRealMoney() != null ? wallet.getRealMoney() : 0.0;
+            double currentBonus = wallet.getBonusMoney() != null ? wallet.getBonusMoney() : 0.0;
+            wallet.setRealMoney(currentReal + request.getAmount());
+            wallet.setBalance(wallet.getRealMoney() + currentBonus);
             walletRepository.save(wallet);
 
             wallet.setOrganizationId(student.getOrganizationId());

@@ -73,6 +73,22 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void sendRegistrationOtp(String toEmail, String otp) {
+        String body =
+                "<h2>Smart Foods Verification Code</h2>" +
+                        "<p>Welcome to Smart Foods! Your registration verification OTP is:</p>" +
+                        "<h1 style='color:#4CAF50'>" + otp + "</h1>" +
+                        "<p>This OTP is valid for 5 minutes. Do not share it with anyone.</p>" +
+                        "<br><b>Smart Foods Team</b>";
+
+        sendEmail(
+                toEmail,
+                "Smart Foods - Registration Verification OTP",
+                body
+        );
+    }
+
+    @Override
     public void sendOrderInvoiceEmail(String toEmail, String studentName, String orderNumber, String foodName, int quantity, double totalPrice, String date) {
         if (toEmail == null || toEmail.isBlank()) return;
 

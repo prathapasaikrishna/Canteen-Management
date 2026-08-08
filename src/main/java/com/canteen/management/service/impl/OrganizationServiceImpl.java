@@ -23,15 +23,20 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponse addOrganization(OrganizationRequest request) {
 
-        if (organizationRepository.existsByOrganizationCode(
-                request.getOrganizationCode())) {
+        java.util.Optional<Organization> existingOpt = organizationRepository.findByOrganizationCode(request.getOrganizationCode());
 
-            throw new RuntimeException("Organization Code already exists");
+        Organization organization;
+        if (existingOpt.isPresent()) {
+            organization = existingOpt.get();
+            if ("ACTIVE".equalsIgnoreCase(organization.getStatus())) {
+                throw new RuntimeException("Organization Code already exists and is active");
+            }
+            organization.setStatus("ACTIVE");
+        } else {
+            organization = new Organization();
+            organization.setOrganizationCode(request.getOrganizationCode());
         }
 
-        Organization organization = new Organization();
-
-        organization.setOrganizationCode(request.getOrganizationCode());
         organization.setName(request.getName());
         organization.setType(request.getType());
         organization.setEmail(request.getEmail());

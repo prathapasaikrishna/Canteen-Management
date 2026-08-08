@@ -31,8 +31,18 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchResponse addBranch(BranchRequest request) {
 
-        if (branchRepository.existsByBranchCode(request.getBranchCode())) {
-            throw new RuntimeException("Branch Code already exists");
+        java.util.Optional<Branch> existingOpt = branchRepository.findByBranchCode(request.getBranchCode());
+
+        Branch branch;
+        if (existingOpt.isPresent()) {
+            branch = existingOpt.get();
+            if ("ACTIVE".equalsIgnoreCase(branch.getStatus())) {
+                throw new RuntimeException("Branch Code already exists and is active");
+            }
+            branch.setStatus("ACTIVE");
+        } else {
+            branch = new Branch();
+            branch.setBranchCode(request.getBranchCode());
         }
 
         Organization organization = organizationRepository
@@ -40,9 +50,6 @@ public class BranchServiceImpl implements BranchService {
                 .orElseThrow(() ->
                         new RuntimeException("Organization Not Found"));
 
-        Branch branch = new Branch();
-
-        branch.setBranchCode(request.getBranchCode());
         branch.setBranchName(request.getBranchName());
         branch.setAddress(request.getAddress());
         branch.setCity(request.getCity());

@@ -140,4 +140,21 @@ public class StudentController {
         res.setProfileUrl(imageUrl);
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping("/all")
+    public java.util.List<Student> getAllStudents() {
+        return studentRepository.findAll().stream()
+                .filter(s -> "STUDENT".equalsIgnoreCase(s.getRole()))
+                .toList();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable("id") Integer id) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
+        studentRepository.delete(student);
+        return ResponseEntity.ok(new ApiResponse("Customer deleted successfully"));
+    }
 }

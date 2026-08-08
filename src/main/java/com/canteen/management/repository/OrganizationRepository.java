@@ -12,4 +12,5 @@ public interface OrganizationRepository
 
     boolean existsByOrganizationCode(String organizationCode);
 
+    long countByStatusNotIgnoreCase(String status);
 }

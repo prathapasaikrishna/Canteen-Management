@@ -75,11 +75,11 @@ public class SuperAdminServiceImpl implements SuperAdminService {
                 new SuperAdminDashboardResponse();
 
         response.setTotalOrganizations(
-                organizationRepository.count()
+                organizationRepository.countByStatusNotIgnoreCase("INACTIVE")
         );
 
         response.setTotalBranches(
-                branchRepository.count()
+                branchRepository.countByStatusNotIgnoreCase("INACTIVE")
         );
 
         response.setTotalStudents(
